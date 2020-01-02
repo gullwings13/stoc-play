@@ -19,7 +19,7 @@ Trade virtual stock to gain confidence in stock trading
 
 ## Project Description
 
-Web application that allows a use to make virtual stock market trades. It would allow a user to search for stock symbols, look up buy/sell prices and, purchase/sell stocks based on real stock market values. The user would be able to track portfolio progress over time.
+Web application that allows a user to make virtual stock market trades. It would allow a user to search for stock symbols, look up buy/sell prices and, purchase/sell stocks based on real stock market values. The user would be able to track portfolio progress over time.
 
 ## Wireframes
 
@@ -27,7 +27,7 @@ https://wireframe.cc/3Wgu2c
 
 ## Priority Matrix
 
-![alt text](https://res.cloudinary.com/ddkoc1hdy/image/upload/v1577999023/Screen_Shot_2020-01-02_at_4.03.16_PM_apgdi1.png "Priority Matrix") 
+![alt text](https://res.cloudinary.com/ddkoc1hdy/image/upload/v1578000250/Screen_Shot_2020-01-02_at_4.23.18_PM_bsawwo.png "Priority Matrix") 
 
 
 ## API Data Sample
@@ -43,16 +43,16 @@ https://wireframe.cc/3Wgu2c
 - Allow user to search for specific stock
 - Allow user to buy stock (virtually at current price) (putting into their portfolio)
 - Allow user to sell stock (virtually at current price) (removing from their portfolio)
+- Store portfolio and current cash balance in local storage
 - Allow user to see current value of portfolio
 
 #### PostMVP 
 
 - Allow user to see individual and whole portfolio performance over time
-- Store portfolio and current cash balance in local storage
 - See historical stock prices
 - Graph stock prices (individual, portfolio)
-- Add game mode
-- Game mode would include following potential features
+- Add Rick and Morty game mode (a more gameified version of the app set in Rick and Morty Universe)
+- Game mode would include following potential features:
 - Interface with Rick and Morty API
 - Travel to rick and morty locations
 - Sell rick and morty objects (mapped to select few stocks at random points in time (historical stock price))
