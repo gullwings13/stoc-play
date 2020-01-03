@@ -146,43 +146,52 @@ let quoteSymbol = '&symbol=' // plus symbol
 // API Key
 let apiKey = '&apikey=SI7NQQ7U40XVI2K7'
 
-function makeTableRow(label, data, unit)
+
+// Global Variables
+let currentSelectedStock;
+
+const closeSlideOut = () =>
 {
-    let rowElement  = document.createElement('div')
-    let labelElement = document.createElement('div')
-    let dataElement = document.createElement('div')
-    let unitElement = document.createElement('div')
-
-    rowElement.classList.add('Rtable-cell')
-    labelElement.classList.add('label')
-    dataElement.classList.add('data')
-    unitElement.classList.add('unit')
-
-    labelElement.innerHTML = label
-    dataElement.innerHTML = data
-    unitElement.innerHTML = unit
-
-
-    if(labelElement.innerHTML != "")
-    {
-        rowElement.append(labelElement)
-    }
-    rowElement.append(dataElement)
-    if(unitElement.innerHTML != "")
-    {
-        rowElement.append(unitElement)
-    }
-
-    return rowElement
+    document.querySelector('#slide-out-parent').classList.add('hidden')
 }
 
-
-const searchButtonClick = symbolSearchText =>
+const searchResultClick = (event) =>
 {
-    console.log('Search:'+symbolSearchText)
-    // https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Micro&apikey=SI7NQQ7U40XVI2K7
-    let queryString = `${baseURL}${searchFunction}${searchKeyword}${symbolSearchText}${apiKey}`
-    collectResults(queryString, renderSearchResults)
+    globalQuote(event.currentTarget.dataset.symbol)
+
+    document.querySelector('#slide-out-parent').classList.remove('hidden')
+}
+
+const buildTableRowElement = (tableElementObject) =>
+{
+    let rowElement  = document.createElement('div')
+    rowElement.classList.add('Rtable-cell')
+
+    Object.keys(tableElementObject).forEach(keyName =>{
+
+        let keyValue = tableElementObject[keyName]
+
+        if(keyName == "clickEvent")
+        {
+            rowElement.addEventListener('click',keyValue)
+        }
+        else if(keyName == 'domDataSet')
+        {
+            rowElement.setAttribute("data-"+keyValue[0], keyValue[1]);
+        }
+        else
+        {
+            let rowSubElement = document.createElement('div')
+            rowSubElement.classList.add(keyName)
+            rowSubElement.innerHTML = keyValue
+            if(keyValue != "")
+            {
+                rowElement.append(rowSubElement)
+            }
+        }
+    })
+
+    return rowElement
 }
 
 // const timeSeries = symbol =>
@@ -199,60 +208,75 @@ const globalQuote = symbol =>
     collectResults(queryString, renderQuoteResults)
 }
 
-const setEventListeners = () =>
+const renderSearchResults = results =>
 {
-    let searchText = document.querySelector('#search-text')
-    let searchButton = document.querySelector('#search-button')
-    searchButton.addEventListener('click',()=>{
-        searchButtonClick(searchText.value)
-        searchText.value = ""
+    let main = document.querySelector('#main-results')
+    main.innerHTML = ""
+    results.bestMatches.forEach(match => {
+        let stockSearchMatch = buildTableRowElement({clickEvent: searchResultClick, domDataSet: ['symbol',match["1. symbol"]],searchSymbol:match["1. symbol"], searchName:match["2. name"],unit:""})
+        // let rowElementObject = {searchSymbol:match["1. symbol"], searchName:match["2. name"]}
+        // let stockSearchMatch = buildTableRowElement(rowElementObject)
+        main.append(stockSearchMatch)
     })
 }
 
-const renderSearchResults = results =>
-{
-    let main = document.querySelector('#main')
-    main.innerHTML = ""
-    results.bestMatches.forEach(match => {
-        main.innerHTML += match["1. symbol"]+"\r"
-    })
-}
+
 
 const renderQuoteResults = results =>
 {
-    let main = document.querySelector('#main')
+    //let slideOutInner = document.querySelector('#slide-out-inner')
+    // slideOutInner.innerHTML = results
+    // slideOutInner.classList.remove('hidden')
+    console.log(results)
+    let slideOutTitle = document.querySelector('#slide-out-title')
+    slideOutTitle.innerHTML = results['Global Quote']['01. symbol']
+
+    let slideOutSummary = document.querySelector('#slide-out-summary')
+    slideOutTitle.innerHTML = results['Global Quote']['01. symbol']
+
+    let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
+    slideOutBuyPrice.innerHTML = results['Global Quote']['05. price']
+
+    let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
+    slideOutSellPrice.innerHTML = results['Global Quote']['05. price']
+
 }
-
-// const renderResults = results =>
-// {
-//     console.log(results)
-// }
-//
-
 const collectResults = async (queryString,renderFunction) =>
 {
     try
     {
-        //let results = await axios.get()
-        let results = symbolSearch
-        renderFunction(results)
+        let results = await axios.get(queryString)
+        //let results = symbolSearch
+        renderFunction(results.data)
     } catch (error)
     {
         console.log(`Oops! There was an error: ${error}`)
     }
 }
 
-// const collectResults = async () =>
-// {
-//     try
-//     {
-//         let results = await axios.get(`${baseURL}${timeFunction}${stockSymbol}${timeInterval}${apiKey}`)
-//         renderResults(results)
-//     } catch (error)
-//     {
-//         console.log(`Oops! There was an error: ${error}`)
-//     }
-// }
+const searchButtonClick = symbolSearchText =>
+{
+    // https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Micro&apikey=SI7NQQ7U40XVI2K7
+    let queryString = `${baseURL}${searchFunction}${searchKeyword}${symbolSearchText}${apiKey}`
+    collectResults(queryString, renderSearchResults)
+}
 
-//collectResults()
+const setEventListeners = () =>
+{
+    // Toolbox search button event listener
+    let searchText = document.querySelector('#search-text')
+    let searchButton = document.querySelector('#search-button')
+    searchButton.addEventListener('click',(e) =>{
+        e.preventDefault()
+        searchButtonClick(searchText.value)
+        searchText.value = ""
+    })
+
+    // Slide out button event listener
+    let slideOutClose = document.querySelector('#slide-out-close')
+    slideOutClose.addEventListener('click', closeSlideOut)
+}
+
 setEventListeners()
+
+searchButtonClick("mc")

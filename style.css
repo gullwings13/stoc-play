@@ -1,5 +1,22 @@
+/* Color Setup*/
+
+:root {
+    /*     color-scheme-3   */
+    --color-1: rgba(84, 109, 114, 1);
+    --color-2: rgba(137, 160, 165, 1);
+    --color-3: rgba(242, 242, 242, 1);
+    --color-4: rgba(2, 114, 114, 1);
+    --color-5: rgba(164, 188, 191, 1);
+
+    --color-6: rgba(0, 0, 0, 1);
+    --color-7: rgba(255, 255, 255, 1);
+}
+
+/* General Tags*/
+
 * {
     margin: 0;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 html, body {
@@ -15,22 +32,16 @@ body{
 }
 
 header{
+    display: flex;
     background-color: #be0201;
+    height: 20px;
 }
 
 main{
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    background-color: #00D0CB;
-    flex-grow: 1;
-    /*align-items: stretch;*/
+
 }
 
-footer{
-    background-color: #5c37e7;
-}
-
-header, main, footer {
+header, main {
     flex-shrink: 0;
 }
 
@@ -39,10 +50,99 @@ a{
     color: black;
 }
 
+
+/* Classes */
+
 .main-results{
     flex: 1;
 }
 
+.tool-box-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.Rtable {
+    display: flex;
+    flex-direction: column;
+    /*flex-wrap: wrap;*/
+    /*margin: 0 0 3em 0;*/
+    /*padding: 0;*/
+}
+
+.Rtable-cell {
+    /*box-sizing: border-box;*/
+    display: flex;
+    flex-direction: row;
+    /*flex-grow: 1;*/
+    /*width: 100vw;*/
+    padding: 10px 10px;
+    /*overflow: hidden;*/
+    /*list-style: none;*/
+    border: solid 1px var(--color-1);
+    /*background: var(--color-2);*/
+}
+
+.Rtable-cell--head {
+    /*background-color: transparent;*/
+    /*border-color: transparent;*/
+    /*color: var(--color-2);*/
+    /*font-size: 40px;*/
+    /*padding: 20px 10px;*/
+}
+
+.Rtable-cell--weather {
+    /*background-color: transparent;*/
+    /*border-color: transparent;*/
+    /*font-size: 30px;*/
+    /*text-transform: capitalize;*/
+}
+
+/* The below CSS classes are used as object keys in my JS */
+/* thus not adhering to he typical CSS naming conventions*/
+
+.searchSymbol{
+    width: 20%;
+    /*color: var(--color-4);*/
+}
+
+.searchName{
+    /*font-weight: bold;*/
+}
+
+.unit{
+    /*margin: 0 0 0 3px;*/
+    /*color: var(--color-5);*/
+}
+
+/* IDs */
+
+#tool-box{
+    display: flex;
+    flex-direction: column;
+    background-color: #5c37e7;
+    flex-shrink: 0;
+}
+
+#slide-out-parent {
+    position: fixed;
+    height: calc(100vh - 20px);
+    top:20px;
+    left: 0;
+    width: calc(100vw - 2px);
+    background-color: #40fa56;
+    border: solid 1px var(--color-1);
+    padding: 10px 10px;
+}
+
+#slide-out-parent.hidden {
+    display: none;
+}
+
+#main{
+    background-color: #00D0CB;
+    flex-grow: 1;
+}
 
 #logo{
 
@@ -59,3 +159,6 @@ a{
 #menu-button{
 
 }
+
+
+/* Media Queries */
