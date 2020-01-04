@@ -148,18 +148,13 @@ let apiKey = '&apikey=SI7NQQ7U40XVI2K7'
 
 
 // Global Variables
-let currentSelectedStock;
+let currentSelectedStock
+let currentSearchedStocks
+let symbolLookup
 
 const closeSlideOut = () =>
 {
     document.querySelector('#slide-out-parent').classList.add('hidden')
-}
-
-const searchResultClick = (event) =>
-{
-    globalQuote(event.currentTarget.dataset.symbol)
-
-    document.querySelector('#slide-out-parent').classList.remove('hidden')
 }
 
 const buildTableRowElement = (tableElementObject) =>
@@ -175,7 +170,7 @@ const buildTableRowElement = (tableElementObject) =>
         {
             rowElement.addEventListener('click',keyValue)
         }
-        else if(keyName == 'domDataSet')
+        else if(keyName.includes('domDataSet'))
         {
             rowElement.setAttribute("data-"+keyValue[0], keyValue[1]);
         }
@@ -201,38 +196,44 @@ const buildTableRowElement = (tableElementObject) =>
 //     collectResults(symbolSearchText, renderSearchResults)
 // }
 
-const globalQuote = symbol =>
-{
-    // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=SI7NQQ7U40XVI2K7
-    let queryString = `${baseURL}${quoteFunction}${quoteSymbol}${symbol}${apiKey}`
-    collectResults(queryString, renderQuoteResults)
-}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// Render Functions
 
 const renderSearchResults = results =>
 {
     let main = document.querySelector('#main-results')
     main.innerHTML = ""
+    currentSearchedStocks = results.bestMatches;
+    let index = 0
     results.bestMatches.forEach(match => {
-        let stockSearchMatch = buildTableRowElement({clickEvent: searchResultClick, domDataSet: ['symbol',match["1. symbol"]],searchSymbol:match["1. symbol"], searchName:match["2. name"],unit:""})
-        // let rowElementObject = {searchSymbol:match["1. symbol"], searchName:match["2. name"]}
-        // let stockSearchMatch = buildTableRowElement(rowElementObject)
+        let rowElementObject = {
+            clickEvent: searchResultClick,
+            domDataSet1: ['symbol',match["1. symbol"]],
+            domDataSet2: ['name',match["2. name"]],
+            searchSymbol:match["1. symbol"],
+            searchName:match["2. name"]
+        }
+        let stockSearchMatch = buildTableRowElement(rowElementObject)
+        symbolLookup[match["1. symbol"]] = index
         main.append(stockSearchMatch)
+        index++
     })
 }
 
-
-
 const renderQuoteResults = results =>
 {
-    //let slideOutInner = document.querySelector('#slide-out-inner')
-    // slideOutInner.innerHTML = results
-    // slideOutInner.classList.remove('hidden')
-    console.log(results)
     let slideOutTitle = document.querySelector('#slide-out-title')
     slideOutTitle.innerHTML = results['Global Quote']['01. symbol']
 
     let slideOutSummary = document.querySelector('#slide-out-summary')
-    slideOutTitle.innerHTML = results['Global Quote']['01. symbol']
+    console.log("")
+    let symbolNameIndex = symbolLookup[results['Global Quote']['01. symbol']]
+    let symbolName = currentSearchedStocks[symbolNameIndex]
+    slideOutSummary.innerHTML = symbolName
 
     let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     slideOutBuyPrice.innerHTML = results['Global Quote']['05. price']
@@ -241,6 +242,32 @@ const renderQuoteResults = results =>
     slideOutSellPrice.innerHTML = results['Global Quote']['05. price']
 
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+// Event handler functions
+
+const searchResultClick = (event) =>
+{
+    // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=SI7NQQ7U40XVI2K7
+    document.querySelector('#slide-out-parent').classList.remove('hidden')
+    let symbol = event.currentTarget.dataset.symbol
+    let queryString = `${baseURL}${quoteFunction}${quoteSymbol}${symbol}${apiKey}`
+    collectResults(queryString, renderQuoteResults)
+}
+
+const searchButtonClick = symbolSearchText =>
+{
+    // https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Micro&apikey=SI7NQQ7U40XVI2K7
+    let queryString = `${baseURL}${searchFunction}${searchKeyword}${symbolSearchText}${apiKey}`
+    collectResults(queryString, renderSearchResults)
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// Axios Data Collection Function
+
 const collectResults = async (queryString,renderFunction) =>
 {
     try
@@ -254,12 +281,8 @@ const collectResults = async (queryString,renderFunction) =>
     }
 }
 
-const searchButtonClick = symbolSearchText =>
-{
-    // https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Micro&apikey=SI7NQQ7U40XVI2K7
-    let queryString = `${baseURL}${searchFunction}${searchKeyword}${symbolSearchText}${apiKey}`
-    collectResults(queryString, renderSearchResults)
-}
+//////////////////////////////////////////////////////////////////////////
+// Add Event Listeners
 
 const setEventListeners = () =>
 {
