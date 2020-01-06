@@ -50,6 +50,11 @@ a{
     color: black;
 }
 
+button{
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
 
 /* Classes */
 
@@ -58,8 +63,19 @@ a{
 }
 
 .tool-box-row{
+    padding: 10px 10px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+.performance-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.performance-item{
+    margin: 10px 10px;
 }
 
 .Rtable {
@@ -99,10 +115,12 @@ a{
 }
 
 /* The below CSS classes are used as object keys in my JS */
-/* thus not adhering to he typical CSS naming conventions*/
+/* thus not adhering to he typical CSS naming conventions */
+/* as the hyphen in a key breaks objects */
 
 .searchSymbol{
-    width: 20%;
+    width: 30%;
+    
     /*color: var(--color-4);*/
 }
 
@@ -110,11 +128,27 @@ a{
     /*font-weight: bold;*/
 }
 
-.unit{
-    /*margin: 0 0 0 3px;*/
-    /*color: var(--color-5);*/
+.portfolioSymbol{
+    width: 30%;
+    /*background-color: var(--color-4);*/
 }
 
+.portfolioName{
+    width: 35%;
+    /*background-color: var(--color-3);*/
+}
+
+.portfolioValue{
+    width:20%;
+    text-align: right;
+    /*background-color: var(--color-4);*/
+}
+
+.portfolioVolume{
+    width:15%;
+    /*background-color: var(--color-3);*/
+    text-align: right;
+}
 /* IDs */
 
 #tool-box{
@@ -140,7 +174,7 @@ a{
 }
 
 #main{
-    background-color: #00D0CB;
+    background-color: #45d041;
     flex-grow: 1;
 }
 

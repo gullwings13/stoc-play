@@ -1,0 +1,27 @@
+What is completed:
+
+DONE - Collect stock price data from https://www.alphavantage.co/ API
+DONE - Display stock price data on page
+DONE - Allow user to search for specific stock
+DONE - Allow user to buy stock (virtually at current price) (putting into their portfolio)
+DONE - Store portfolio and current cash balance in local storage
+DONE - Allow user to sell stock (virtually at current price) (removing from their portfolio)
+DONE - Add new stock to existing stock if same symbol
+DONE - CSS for displaying portfolio is not currently spaced out well
+
+
+What is not completed:
+- Allow user to see current value of portfolio
+- Add transaction history
+- See graph of own portfolio value
+- see graph of individual stock value
+
+
+
+What issues are there:
+- No confirmation if shown after buying stocks
+- Cannot see how many stocks are owned when clicking on stock
+- No checks on if has enough cash
+- No checks on if has any stocks to sell
+- Round stock display value
+- Round stock purchase and sell amounts

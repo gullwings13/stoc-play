@@ -15,22 +15,25 @@
     </div>
 </header>
 <div id="main">
-<main id="main-results" class="Rtable">
+    <main id="main-results" class="Rtable">
 
-</main>
+    </main>
     <div id="slide-out-parent" class="hidden">
-        <div id="slide-out-close">
-            X
-        </div>
+
         <div id="slide-out-title"></div>
         <div id="slide-out-summary"></div>
         <div id="slide-out-buy-price"></div>
+        <div class="slide-out-currency"></div>
         <input id="slide-out-buy-amount">
-        <button>Buy</button>
+        <button id="slide-out-buy">Buy</button>
         <div id="slide-out-sell-price"></div>
+        <div class="slide-out-currency"></div>
         <input id="slide-out-sell-amount">
-        <button>Sell</button>
+        <button id="slide-out-sell">Sell</button>
         <div id="slide-out-inner">
+        </div>
+        <div id="slide-out-close">
+            X
         </div>
 
     </div>
@@ -38,7 +41,17 @@
 <div id="tool-box">
     <div class="tool-box-row">
         <div id="performance">
-            $10,000
+            <div class="performance-row">
+                <div id="cash-label" class="performance-item">Total Cash:</div>
+                <div id="cash" class="performance-item"></div>
+            </div>
+            <div class="performance-row">
+                <div id="total-value-label" class="performance-item">Total Value:</div>
+                <div id="total-value" class="performance-item"></div>
+                <div id="time-label" class="performance-item">As at </div>
+                <div id="time-value" class="performance-item"></div>
+                <button id="total-value-refresh" class="performance-item">Refresh</button>
+            </div>
         </div>
     </div>
     <div class="tool-box-row">
