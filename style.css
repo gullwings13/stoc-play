@@ -62,20 +62,19 @@ button{
     flex: 1;
 }
 
+.slide-out-row{
+    display: flex;
+}
+
+.slide-out-input{
+    width: 30px;
+}
+
 .tool-box-row{
-    padding: 10px 10px;
+    padding: 1px 10px 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.performance-row{
-    display: flex;
-    flex-direction: row;
-}
-
-.performance-item{
-    margin: 10px 10px;
 }
 
 .Rtable {
@@ -134,7 +133,7 @@ button{
 }
 
 .portfolioName{
-    width: 35%;
+    width: 40%;
     /*background-color: var(--color-3);*/
 }
 
@@ -145,7 +144,7 @@ button{
 }
 
 .portfolioVolume{
-    width:15%;
+    width:10%;
     /*background-color: var(--color-3);*/
     text-align: right;
 }
@@ -160,13 +159,34 @@ button{
 
 #slide-out-parent {
     position: fixed;
-    height: calc(100vh - 20px);
+    height: calc(100vh - 40px);
     top:20px;
     left: 0;
-    width: calc(100vw - 2px);
+    width: calc(100vw - 22px);
     background-color: #40fa56;
     border: solid 1px var(--color-1);
     padding: 10px 10px;
+}
+
+#dialog-box-parent{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+    top:20px;
+    left: 0;
+    width: calc(100vw - 22px);
+    background-color: #40fa56;
+    border: solid 1px var(--color-1);
+    padding: 10px 10px
+}
+
+#onboarding{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-content: space-evenly;
 }
 
 #slide-out-parent.hidden {
@@ -176,6 +196,10 @@ button{
 #main{
     background-color: #45d041;
     flex-grow: 1;
+}
+
+#stock-chart{
+    /*width: 90vw;*/
 }
 
 #logo{

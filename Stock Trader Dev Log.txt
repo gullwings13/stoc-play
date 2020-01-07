@@ -8,19 +8,24 @@ DONE - Store portfolio and current cash balance in local storage
 DONE - Allow user to sell stock (virtually at current price) (removing from their portfolio)
 DONE - Add new stock to existing stock if same symbol
 DONE - CSS for displaying portfolio is not currently spaced out well
+DONE - Allow user to see current value of portfolio (via refresh button)
+DONE - Limit max stocks to 2
+DONE - Remove stock when value goes to zero
+DONE - Cannot see how many stocks are owned when clicking on stock
+
+Working on:
 
 
 What is not completed:
-- Allow user to see current value of portfolio
+- Get back to own portfolio from search screen
 - Add transaction history
 - See graph of own portfolio value
 - see graph of individual stock value
 
 
-
 What issues are there:
 - No confirmation if shown after buying stocks
-- Cannot see how many stocks are owned when clicking on stock
+- Cannot see new amount of stock on purchase screen
 - No checks on if has enough cash
 - No checks on if has any stocks to sell
 - Round stock display value

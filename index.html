@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Stock Trader</title>
+    <script src="https://kit.fontawesome.com/689707eff1.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/689707eff1.js" crossorigin="anonymous"></script>
+    <link href="c3.css" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -19,40 +20,56 @@
 
     </main>
     <div id="slide-out-parent" class="hidden">
-
         <div id="slide-out-title"></div>
         <div id="slide-out-summary"></div>
-        <div id="slide-out-buy-price"></div>
-        <div class="slide-out-currency"></div>
-        <input id="slide-out-buy-amount">
-        <button id="slide-out-buy">Buy</button>
-        <div id="slide-out-sell-price"></div>
-        <div class="slide-out-currency"></div>
-        <input id="slide-out-sell-amount">
-        <button id="slide-out-sell">Sell</button>
+        <div id="slide-out-amount-owned"></div>
+        <div class="slide-out-row">
+            <div id="slide-out-buy-price"></div>
+            <div class="slide-out-currency"></div>
+            <label class="slide-out-amount-label">Buy Amount:</label>
+            <input class="slide-out-input" id="slide-out-buy-amount">
+            <button id="slide-out-buy">Buy</button>
+        </div>
+        <div class="slide-out-row">
+            <div id="slide-out-sell-price"></div>
+            <div class="slide-out-currency"></div>
+            <label class="slide-out-amount-label">Sell Amount:</label>
+            <input class="slide-out-input" id="slide-out-sell-amount">
+            <button id="slide-out-sell">Sell</button>
+        </div>
         <div id="slide-out-inner">
         </div>
+        <div id="stock-chart"></div>
         <div id="slide-out-close">
-            X
+            Close
         </div>
-
+    </div>
+    <div id="dialog-box-parent">
+        <div id="onboarding">
+            <div>Welcome</div>
+            <p>Stock trader allows you to gain confidence in the stock market by allowing you to invest money virtually.
+                Track your progress over several days. You can restart the game at any time via the X menu.</p>
+            <p>Please select a starting amount of money. Higher starting values unlock as you reach certain milestones</p>
+            <button class="onboard-start-buttons" data-amount='5000'>$5,000</button>
+            <button class="onboard-start-buttons" data-amount='20000' disabled>$20,000</button>
+            <button class="onboard-start-buttons" data-amount='100000' disabled>$100,000</button>
+<!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
+<!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
+        </div>
     </div>
 </div>
 <div id="tool-box">
     <div class="tool-box-row">
-        <div id="performance">
-            <div class="performance-row">
-                <div id="cash-label" class="performance-item">Total Cash:</div>
-                <div id="cash" class="performance-item"></div>
-            </div>
-            <div class="performance-row">
-                <div id="total-value-label" class="performance-item">Total Value:</div>
-                <div id="total-value" class="performance-item"></div>
-                <div id="time-label" class="performance-item">As at </div>
-                <div id="time-value" class="performance-item"></div>
-                <button id="total-value-refresh" class="performance-item">Refresh</button>
-            </div>
-        </div>
+        <div id="cash-label" class="performance-item">Total Cash:</div>
+        <div id="cash" class="performance-item"></div>
+    </div>
+    <div class="tool-box-row">
+        <div id="total-value-label" class="performance-item">Total Value:</div>
+        <div id="total-value" class="performance-item"></div>
+        <div id="time-label" class="performance-item"></div>
+        <div id="time-value" class="performance-item"></div>
+        <button id="total-value-refresh" class="performance-item">Refresh</button>
+        <button id="portfolio">Portfolio</button>
     </div>
     <div class="tool-box-row">
         <form id="search-form">
@@ -65,7 +82,9 @@
     </div>
 </div>
 
+<script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="c3.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
