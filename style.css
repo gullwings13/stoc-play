@@ -159,7 +159,7 @@ button{
 
 #slide-out-parent {
     position: fixed;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 140px);
     top:20px;
     left: 0;
     width: calc(100vw - 22px);
@@ -170,15 +170,19 @@ button{
 
 #dialog-box-parent{
     position: fixed;
-    display: flex;
+    display: none;
     flex-direction: column;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 140px);
     top:20px;
     left: 0;
     width: calc(100vw - 22px);
     background-color: #40fa56;
     border: solid 1px var(--color-1);
     padding: 10px 10px
+}
+
+#main-menu{
+    display: none;
 }
 
 #onboarding{

@@ -22,6 +22,11 @@ let quoteSymbol = '&symbol=' // plus symbol
 // API Key
 let apiKey = '&apikey=SI7NQQ7U40XVI2K7'
 
+// Bar Charts API
+let alphavantageAPIForRefresh = true
+let BCbaseURL = 'https://marketdata.websol.barchart.com/getQuote.json?symbols='
+let BCapiKey = '&apikey=da4f1b3d039f0de403eea5e45b14814a'
+
 
 // Global Variables
 let gameInProgress = false
@@ -91,8 +96,15 @@ let portfolioFn = {
         if (portfolio.currentlyOwnedStocks.length > 0)
         {
             portfolio.currentlyOwnedStocks.forEach(ownedStock => {
-                let queryString = buildQuoteQueryString(ownedStock.stock.symbol)
-                collectResults(queryString, portfolioFn.refreshIndividualStockValue)
+                if (alphavantageAPIForRefresh)
+                {
+                    let queryString = buildQuoteQueryString(ownedStock.stock.symbol)
+                    collectResults(queryString, portfolioFn.refreshIndividualStockValue)
+                } else
+                {
+                    let queryString = buildBCQuoteQueryString(ownedStock.stock.symbol)
+                    collectResults(queryString, portfolioFn.refreshIndividualStockValue)
+                }
             })
         } else
         {
@@ -101,11 +113,21 @@ let portfolioFn = {
     },
     refreshIndividualStockValue: (results) =>
     {
-        //console.log(results)
-        // Stock symbol
-        let symbol = results['Global Quote']['01. symbol']
-        // Stock Buy Price
-        let newPrice = results['Global Quote']['05. price']
+        let symbol
+        let newPrice
+
+        if (alphavantageAPIForRefresh)
+        {
+            //console.log(results)
+            // Stock symbol
+            symbol = results['Global Quote']['01. symbol']
+            // Stock Buy Price
+            newPrice = results['Global Quote']['05. price']
+
+        } else
+        {
+            symbol = results
+        }
         portfolioFn.setStockPrice(symbol, newPrice)
 
     },
@@ -145,15 +167,26 @@ const loadLocalPortfolio = () => {
     if (portfolioString !== null)
     {
         portfolio = JSON.parse(portfolioString)
+        gameInProgress = true
+        document.querySelector('#onboarding').style.display = 'none'
+        document.querySelector('#dialog-box-parent').style.display = 'none'
+        renderPortfolio(portfolio)
     } else
     {
         buildNewPortfolio()
+        document.querySelector('#onboarding').style.display = 'flex'
+        document.querySelector('#dialog-box-parent').style.display = 'flex'
     }
 }
 
 const saveLocalPortfolio = () => {
     let portfolioString = JSON.stringify(portfolio)
     localStorage.setItem("main-portfolio", portfolioString)
+}
+
+const deleteLocalPortfolio = () => {
+    delete portfolio
+    localStorage.removeItem("main-portfolio")
 }
 
 const buildNewPortfolio = () => {
@@ -920,7 +953,7 @@ const prepareDataForChart = (dataForPrep) =>
     // delete dataForPrep['Meta Data']
     //console.log("Data for prep")
     //console.log(dataForPrep)
-    
+
     data = dataForPrep['Time Series (Daily)']
     let axisArray = ['date']
     let dataArray = [dataForPrep['Meta Data']["2. Symbol"]]
@@ -933,8 +966,8 @@ const prepareDataForChart = (dataForPrep) =>
 
     let columns = {
         columns: [
-            axisArray, 
-                dataArray
+            axisArray,
+            dataArray
         ],
         unload: currentChartData
     }
@@ -946,16 +979,14 @@ const prepareDataForChart = (dataForPrep) =>
     //     ],
     //     unload: ['data2', 'data3'],
     // }
-    
+
     //console.log(columns)
     c3ChartRef.load(columns)
     currentChartData = dataForPrep['Meta Data']["2. Symbol"]
 }
 
 
-
 //chart.data.columns = prepareDataForChart(data)
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -985,7 +1016,6 @@ const buildPortfolioStock = (newSymbol, newName, newVolume, newSingleValue, newC
 
 //////////////////////////////////////////////////////////////////////////
 // Misc Util Functions
-
 
 
 const buildTableRowElement = (tableElementObject) =>
@@ -1088,7 +1118,7 @@ const removeStock = (stockToRemove) => {
 const getTimeSeries = (symbol) => {
     let queryString = buildDailyTimeSeriesQueryString(symbol)
     //console.log(queryString)
-    collectResults(queryString,prepareDataForChart,3600)
+    collectResults(queryString, prepareDataForChart, 3600)
 }
 
 
@@ -1096,8 +1126,12 @@ const buildQuoteQueryString = (symbol) => {
     return `${baseURL}${quoteFunction}${quoteSymbol}${symbol}${apiKey}`
 }
 
+const buildBCQuoteQueryString = (symbol) => {
+    return `${BCbaseURL}${symbol}${BCapiKey}`
+}
+
 const buildDailyTimeSeriesQueryString = (symbol) => {
-    return `${baseURL}${dailyFunction}${quoteSymbol}${symbol}${outputSize}${apiKey}`    
+    return `${baseURL}${dailyFunction}${quoteSymbol}${symbol}${outputSize}${apiKey}`
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1139,9 +1173,9 @@ const renderSearchResults = results =>
 
 const renderQuoteResults = results =>
 {
-    
+
     // Specifically for when someone clicks on a search result
-    
+
     currentSelectedStock = {}
 
     // Stock symbol
@@ -1165,8 +1199,7 @@ const renderQuoteResults = results =>
         volume = portfolio.currentlyOwnedStocks[index].volume
         document.querySelector('#stock-chart').style.display = 'inline'
         getTimeSeries(currentSelectedStock.symbol)
-    }
-    else
+    } else
     {
         // hide chart if no stock owned
         // mainly to keep API calls low 
@@ -1175,7 +1208,7 @@ const renderQuoteResults = results =>
     currentSelectedStock.volume = volume
     slideOutAmountOwned.innerHTML = currentSelectedStock.volume
 
-    
+
     // Currency
     let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     let symbolCurrency = currentSearchedStocks[symbolNameIndex]['8. currency']
@@ -1208,7 +1241,6 @@ const renderPortfolio = portfolio =>
     main.innerHTML = ""
 
 
-    
     let portfolioHeader = buildTableRowElement({portfolioHeader: "Your Stocks"})
     main.append(portfolioHeader)
     if (portfolio.currentlyOwnedStocks.length > 0)
@@ -1264,7 +1296,7 @@ const renderPortfolioStock = (selectedStock) =>
     // display chart and update its data
     document.querySelector('#stock-chart').style.display = 'inline'
     getTimeSeries(currentSelectedStock.symbol)
-    
+
     let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     currentSelectedStock.currency = selectedStock.currency
     slideOutCurrencyList.forEach(slideOutCurrency => {
@@ -1311,6 +1343,9 @@ const slideOutSellClick = (stock, amount) =>
         if (findStockIndexInPortfolio(soldStock.stock.symbol) >= 0)
         {
             document.querySelector("#slide-out-amount-owned").innerHTML = portfolioFn.getStockBalance(soldStock.stock.symbol)
+        } else
+        {
+            document.querySelector("#slide-out-amount-owned").innerHTML = 0
         }
     } else
     {
@@ -1372,9 +1407,31 @@ const searchButtonClick = symbolSearchText =>
     collectResults(queryString, renderSearchResults)
 }
 
-function portfolioClick()
+const portfolioClick = () =>
 {
     renderPortfolio(portfolio)
+}
+
+const menuClick = () =>
+{
+    document.querySelector('#dialog-box-parent').style.display = 'flex'
+    document.querySelector('#main-menu').style.display = 'flex'
+}
+
+const restartGameClick = () =>
+{
+    deleteLocalPortfolio()
+    gameInProgress = false
+    loadLocalPortfolio()
+    document.querySelector('#dialog-box-parent').style.display = 'flex'
+    document.querySelector('#onboarding').style.display = 'flex'
+    document.querySelector('#main-menu').style.display = 'none'
+}
+
+const closeMenuClick = () =>
+{
+    document.querySelector('#dialog-box-parent').style.display = 'none'
+    document.querySelector('#main-menu').style.display = 'none'
 }
 
 // const timeSeries = symbol =>
@@ -1418,7 +1475,19 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
         } else
         {
             let results = await axios.get(queryString)
-            sessionStorage.setItem(queryString, JSON.stringify(results.data))
+            let resultsData
+            if(results.data != null)
+            {
+                resultsData = results.data
+                // Specifically coded earlier on to support AlphaVantage Data Structure
+            }
+            else
+            {
+                resultsData = results
+                // Added later to remove the dependancy on Alphavantage data Structure
+            }
+
+            sessionStorage.setItem(queryString, JSON.stringify(resultsData))
             if (cacheTime != 0)
             {
                 let expire = now + cacheTime * 1000
@@ -1426,7 +1495,7 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
                 // console.log("Expire:"+expire)
                 sessionStorage.setItem(queryString + "-expire", expire)
             }
-            data = results.data
+            data = resultsData
             console.log("Live API Request")
         }
 
@@ -1488,20 +1557,59 @@ const setEventListeners = () =>
         e.preventDefault()
         portfolioClick()
     })
-    
+
     let onboardingButtons = document.querySelectorAll('.onboard-start-buttons')
     onboardingButtons.forEach(button => {
-        button.addEventListener('click', (e) =>{
+        button.addEventListener('click', (e) => {
             e.preventDefault()
             let startCash = parseInt(e.currentTarget.dataset.amount)
             portfolioFn.updateCashBalance(startCash)
             beginGame()
         })
     })
+
+    let menuButton = document.querySelector('#menu-button')
+    menuButton.addEventListener('click', menuClick)
+
+    let restartGameButton = document.querySelector('#restart-game')
+    restartGameButton.addEventListener('click', restartGameClick)
+
+    let closeMenuButton = document.querySelector('#close-menu')
+    closeMenuButton.addEventListener('click', closeMenuClick)
 }
 
-setEventListeners()
-loadLocalPortfolio()
+const initAppSetup = () =>
+{
+
+
+    PNotify.defaults.icons = 'fontawesome5';
+    PNotify.defaults.width = window.innerWidth - 30 + 'px'
+    PNotify.defaults.modules = {
+        Buttons: {
+            closer: true,
+            closerHover: false,
+            sticker: false
+        },
+        Mobile: {
+
+            swipeDismiss: true,
+            styling: false
+        }
+    }
+
+}
+
+let PNstack = {
+    dir1: 'up', // With a dir1 of 'up', the stacks will start appearing at the bottom.
+    // Without a `dir2`, this stack will be horizontally centered, since the `dir1` axis is vertical.
+    firstpos1: 100, // The notices will appear 25 pixels from the bottom of the context.
+    spacing1: 5,
+    // Without a `spacing1`, this stack's notices will be placed 25 pixels apart.
+    push: 'top', // Each new notice will appear at the bottom of the screen, which is where the 'top' of the stack is. Other notices will be pushed up.
+    // modal: true, // When a notice appears in this stack, a modal overlay will be created.
+    overlayClose: true, // When the user clicks on the overlay, all notices in this stack will be closed.
+    context: document.getElementById('main')
+}
 
 // Game Flow Functions
 
@@ -1511,4 +1619,12 @@ const beginGame = () =>
     document.querySelector('#onboarding').style.display = 'none'
     document.querySelector('#dialog-box-parent').style.display = 'none'
     renderPortfolio(portfolio)
+    PNotify.alert({text: 'Welcome', stack: PNstack})
+    setTimeout(() => {
+        PNotify.alert({text: 'Search for stock using the search bar', stack: PNstack})
+    }, 1000)
 }
+
+setEventListeners()
+initAppSetup()
+loadLocalPortfolio()

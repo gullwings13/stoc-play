@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="style.css">
     <link href="c3.css" rel="stylesheet">
+    <link href="node_modules/pnotify/dist/PNotifyBrightTheme.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <header>
@@ -56,6 +57,11 @@
 <!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
 <!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
         </div>
+        <div id="main-menu">
+            <div>Main Menu</div>
+            <button id="restart-game">Restart Game</button>
+            <button id="close-menu">Close</button>
+        </div>
     </div>
 </div>
 <div id="tool-box">
@@ -73,7 +79,7 @@
     </div>
     <div class="tool-box-row">
         <form id="search-form">
-            <input type="text" id="search-text">
+            <input type="text" id="search-text" placeholder="Search">
             <button id="search-button">Search</button>
         </form>
         <div id="menu">
@@ -85,6 +91,9 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="c3.min.js"></script>
+<script type="text/javascript" src="node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script type="text/javascript" src="node_modules/pnotify/dist/iife/PNotifyMobile.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
