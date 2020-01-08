@@ -201,7 +201,7 @@ const formatCurrencyText = (amount) =>
 
 // Portfolio Load/Save/Build Functions
 
-const loadLocalPortfolio = () => 
+const loadLocalPortfolio = () =>
 {
     let portfolioString = localStorage.getItem("main-portfolio")
     if (portfolioString !== null)
@@ -219,19 +219,19 @@ const loadLocalPortfolio = () =>
     }
 }
 
-const saveLocalPortfolio = () => 
+const saveLocalPortfolio = () =>
 {
     let portfolioString = JSON.stringify(portfolio)
     localStorage.setItem("main-portfolio", portfolioString)
 }
 
-const deleteLocalPortfolio = () => 
+const deleteLocalPortfolio = () =>
 {
     delete portfolio
     localStorage.removeItem("main-portfolio")
 }
 
-const buildNewPortfolio = () => 
+const buildNewPortfolio = () =>
 {
     portfolio = {
         cashBalance: 0,
@@ -251,27 +251,28 @@ const buildNewPortfolio = () =>
 
 // Charts
 
-let chartObject = 
+let chartObject =
     {
-    bindto: '#stock-chart',
-    size: {
-        height: 240,
-        width: 320
-    },
-    data: {
-        x: 'date',
-        columns: [
-            ['date', 10, 30, 45, 50, 70, 100],
-            ['data1', 30, 200, 100, 400, 150, 250],
-        ]
-    },
-    axis: {
-        x: {
-            type: 'timeseries'
-        }
-    },
-    regions: [{start: '2019-08-14', end: '2020-01-06'}]
-}
+        bindto: '#stock-chart',
+        size: {
+            height: 240,
+            width: 320
+        },
+        data: {
+            x: 'date',
+            columns: [
+                ['date', 10, 30, 45, 50, 70, 100],
+                ['data1', 30, 200, 100, 400, 150, 250],
+            ]
+        },
+        axis: {
+            x: {
+                type: 'timeseries'
+            }
+        },
+        colors: {data1:'#ffffff'},
+        regions: [{start: '2019-08-15', end: '2020-01-07'}]
+    }
 
 let c3ChartRef
 
@@ -308,6 +309,8 @@ const prepareDataForChart = (dataForPrep) =>
         ],
         unload: currentChartData
     }
+    columns['colors'] = {}
+    columns['colors'][dataForPrep['Meta Data']["2. Symbol"]] = '#ffffff'
 
     // let columns2 = {
     //     columns: [
@@ -355,9 +358,9 @@ const buildPortfolioStock = (newSymbol, newName, newVolume, newSingleValue, newC
 
 // Misc Util Functions
 
-const returnTextAtSpecificLength = (text,length) =>
+const returnTextAtSpecificLength = (text, length) =>
 {
-    
+
 }
 
 const buildTableRowElement = (tableElementObject) =>
@@ -386,7 +389,7 @@ const buildTableRowElement = (tableElementObject) =>
             }
         }
     })
-    
+
     return rowElement
 }
 
@@ -437,7 +440,7 @@ const addStock = (stockToAdd) =>
     return returnValue
 }
 
-const removeStock = (stockToRemove) => 
+const removeStock = (stockToRemove) =>
 {
 
     // console.log('removeStock')
@@ -459,24 +462,24 @@ const removeStock = (stockToRemove) =>
     }
 }
 
-const getTimeSeries = (symbol) => 
+const getTimeSeries = (symbol) =>
 {
     let queryString = buildDailyTimeSeriesQueryString(symbol)
     //console.log(queryString)
     collectResults(queryString, prepareDataForChart, 3600)
 }
 
-const buildQuoteQueryString = (symbol) => 
+const buildQuoteQueryString = (symbol) =>
 {
     return `${baseURL}${quoteFunction}${quoteSymbol}${symbol}${apiKey}`
 }
 
-const buildBCQuoteQueryString = (symbol) => 
+const buildBCQuoteQueryString = (symbol) =>
 {
     return `${BCbaseURL}${symbol}${BCapiKey}`
 }
 
-const buildDailyTimeSeriesQueryString = (symbol) => 
+const buildDailyTimeSeriesQueryString = (symbol) =>
 {
     return `${baseURL}${dailyFunction}${quoteSymbol}${symbol}${outputSize}${apiKey}`
 }
@@ -489,7 +492,7 @@ const buildNewsQueryString = (searchTerms) =>
 const getNews = (searchTerms) =>
 {
     let queryString = buildNewsQueryString(searchTerms)
-    collectResults(queryString,renderNewsForSymbol)
+    collectResults(queryString, renderNewsForSymbol)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -598,7 +601,7 @@ const renderPortfolio = portfolio =>
 
     let main = document.querySelector('#main-results')
     main.innerHTML = ""
-    
+
     let portfolioHeader = buildTableRowElement({portfolioHeader: "Your Stocks"})
     portfolioHeader.classList.add('Rtable-cell--head')
     main.append(portfolioHeader)
@@ -684,7 +687,7 @@ const renderPortfolioStock = (selectedStock) =>
     slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
 
     //console.log("here!!!!")
-    
+
     getNews(currentSelectedStock.name)
 }
 
@@ -692,14 +695,13 @@ const renderNewsForSymbol = (results) =>
 {
     //console.log(results)
     let newsPlace = document.querySelector('#slide-out-inner')
-    if(results.articles.length > 1)
+    if (results.articles.length > 1)
     {
         newsPlace.innerHTML = `<div class='stock-news-title'>${results.articles[0].source.name}</div> <div class='stock-news-link'><a href='${results.articles[0].url}'> ${results.articles[0].title} </a></div>`
         newsPlace.innerHTML += `<div class='stock-news-title'>${results.articles[1].source.name}</div> <div class='stock-news-link'><a href='${results.articles[1].url}'> ${results.articles[1].title} </a></div>`
-    }
-    else if (results.articles.length > 0)
+    } else if (results.articles.length > 0)
     {
-        newsPlace.innerHTML = `<div class='stock-news-title'>${results.articles[0].source.name}</div> <div class='stock-news-link'><a href='${results.articles[0].url}'> ${results.articles[0].title} </a></div>`        
+        newsPlace.innerHTML = `<div class='stock-news-title'>${results.articles[0].source.name}</div> <div class='stock-news-link'><a href='${results.articles[0].url}'> ${results.articles[0].title} </a></div>`
     }
 }
 
@@ -710,6 +712,7 @@ const renderNewsForSymbol = (results) =>
 const closeSlideOutClick = () =>
 {
     document.querySelector('#slide-out-parent').classList.add('hidden')
+    document.querySelector('#main-results').classList.remove('hidden')
 }
 
 const slideOutSellClick = (stock, amount) =>
@@ -776,6 +779,7 @@ const slideOutBuyClick = (stock, amount) =>
 const portfolioStockClick = (event) =>
 {
     document.querySelector('#slide-out-parent').classList.remove('hidden')
+    document.querySelector('#main-results').classList.add('hidden')
     let index = event.currentTarget.dataset.index
     renderPortfolioStock(portfolio.currentlyOwnedStocks[index])
 }
@@ -784,6 +788,7 @@ const searchResultClick = (event) =>
 {
     // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=SI7NQQ7U40XVI2K7
     document.querySelector('#slide-out-parent').classList.remove('hidden')
+    document.querySelector('#main-results').classList.add('hidden')
     let symbol = event.currentTarget.dataset.symbol
     //let queryString = `${baseURL}${quoteFunction}${quoteSymbol}${symbol}${apiKey}`
     let queryString = buildQuoteQueryString(symbol)
@@ -800,6 +805,9 @@ const searchButtonClick = symbolSearchText =>
 const portfolioClick = () =>
 {
     renderPortfolio(portfolio)
+    document.querySelector('#main-results').classList.remove('hidden')
+    document.querySelector('#slide-out-parent').classList.remove('hidden')
+    document.querySelector('#dialog-parent').classList.remove('hidden')
 }
 
 const menuClick = () =>
