@@ -8,12 +8,12 @@ Trade virtual stock to gain confidence in stock trading
 
 |  Day | Deliverable | Status
 |---|---| ---|
-|Jan 2rd| Project Prompt, Wireframes / Priority Matrix / Functional Components | Incomplete
-|Jan 3rd| Pseudocode / Actual code | Incomplete
-|Jan 5th| Core Application Structure (HTML, CSS, etc.) | Incomplete
-|Jan 6th| Initial Clickable Model / MVP | Incomplete
-|Jan 7th| Polish / Post-MVP  | Incomplete
-|Jan 8th| Polish / Post-MVP | Incomplete
+|Jan 2rd| Project Prompt, Wireframes / Priority Matrix / Functional Components | Complete
+|Jan 3rd| Pseudocode / Actual code | Complete
+|Jan 5th| Core Application Structure (HTML, CSS, etc.) | Complete
+|Jan 6th| Initial Clickable Model / MVP | Complete
+|Jan 7th| Polish / Post-MVP  | Complete
+|Jan 8th| Polish / Post-MVP | Complete
 |Jan 9th| Present | Incomplete
 
 
@@ -61,34 +61,73 @@ https://wireframe.cc/3Wgu2c
 
 | Component | Priority | Estimated Time | Time Invested | Actual Time |
 | --- | :---: |  :---: | :---: | :---: |
-| Whiteboard Basic Plan | H | 1hrs| 1.5hrs | Xhrs |
-| Basic HTML Page | H | 1hrs| 1.5hrs | Xhrs |
-| Basic JS API Data Pull | H | 2hrs| 3hrs | Xhrs |
-| Stock Search Function | H | 1hrs| 2hrs | Xhrs |
-| Stock Buy Function | H | 2hrs| 3hrs | Xhrs |
-| Stock Sell Function | H | 1hrs| 1hrs | Xhrs |
-| Local Storage | M | 1hrs| 1hrs | Xhrs |
-| Display current portfolio | H | 2hrs| 3hrs | Xhrs |
-| Basic CSS | H | 3hrs| 4hrs | Xhrs |
-| Display graph of portfolio performance  | M | 5hrs| 6hrs | Xhrs |
-| Display graph of Individual stock performance  | M | 2hrs| 3hrs | Xhrs |
-| Polished CSS | H | 4hrs| 5hrs | Xhrs |
-| Game Mode - Interface/CSS | L | 2hrs| 2hrs | Xhrs |
-| Game Mode - Travel to RM Locations | L | 2hrs| 2hrs | Xhrs |
-| Game Mode - Select stocks to be mapped to RM Objects | L | 2hrs| 2hrs | Xhrs |
-| Game Mode - Select stock periods to be mapped to RM locations | L | 2hrs| 2hrs | Xhrs |
-| Game Mode - Game loop, game win, game lose | L | 2hrs| 2hrs | Xhrs |
-| Game Mode - Game balance / Play testing | L | 2hrs| 2hrs | Xhrs |
-| Total |  | 37hrs| 46hrs | Xhrs |
+| Whiteboard Basic Plan | H | 1hrs| 1.5hrs | 2hrs |
+| Basic HTML Page | H | 1hrs| 1.5hrs | 1hrs |
+| Basic JS API Data Pull | H | 2hrs| 3hrs | 1hrs |
+| Stock Search Function | H | 1hrs| 2hrs | 1hrs |
+| Stock Buy Function | H | 2hrs| 3hrs | 2hrs |
+| Stock Sell Function | H | 1hrs| 1hrs | 2hrs |
+| Local Storage | M | 1hrs| 1hrs | 2hrs |
+| Display current portfolio | H | 2hrs| 3hrs | 2hrs |
+| Basic CSS | H | 3hrs| 4hrs | 1hrs |
+| Display graph of portfolio performance  | M | 5hrs| 6hrs | n/a |
+| Display graph of Individual stock performance  | M | 2hrs| 3hrs | 3hrs |
+| Polished CSS | H | 4hrs| 5hrs | 7hrs |
+| Game Mode - Interface/CSS | L | 2hrs| 2hrs | n/a |
+| Game Mode - Travel to RM Locations | L | 2hrs| 2hrs | n/a |
+| Game Mode - Select stocks to be mapped to RM Objects | L | 2hrs| 2hrs | n/a |
+| Game Mode - Select stock periods to be mapped to RM locations | L | 2hrs| 2hrs | n/a |
+| Game Mode - Game loop, game win, game lose | L | 2hrs| 2hrs | n/a |
+| Game Mode - Game balance / Play testing | L | 2hrs| 2hrs | n/a |
+| Total |  | 37hrs| 46hrs | 24hrs |
 
 
 ## Code Snippet
 
 ```
-function TBA() {
-	// TBA
+const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
+{
+    try
+    {
+        let data // final data from cache or live API call
+        let cache = sessionStorage.getItem(queryString)
+        let expire = sessionStorage.getItem(queryString + "-expire")
+        let now = Date.now()
+        let expiryMS = now - expire
+        if (cache !== null && expiryMS < 0)
+        {
+            data = JSON.parse(cache)
+            console.log("Cached API Request. Cache expires in " + (-expiryMS / 1000) + " seconds")
+        } else
+        {
+            let results = await axios.get(queryString)
+            if (results.data != null)
+            {
+                sessionStorage.setItem(queryString, JSON.stringify(results.data))
+                if (cacheTime != 0)
+                {
+                    let expire = now + cacheTime * 1000
+                    sessionStorage.setItem(queryString + "-expire", expire)
+                }
+                data = results.data
+                console.log("Live API Request")
+            }
+        }
+        if (data != null)
+        {
+            renderFunction(data)
+        } else
+        {
+            easyPnotify("Error: API did not return expected data, you may be over your limit. Try again in a minute")
+        }
+
+    } catch (error)
+    {
+        console.log(error)
+    }
 }
 ```
 
 ## Change Log
-2020.1.2 - Created this document  
+2020.1.2 - Created this document
+2020.1.8 - Updated document  

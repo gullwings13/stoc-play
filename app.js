@@ -141,49 +141,54 @@ let portfolioFn = {
         })
         portfolioFn.calcPortfolioTotalValue()
     },
-    refreshIndividualStockValue:
-        (results) =>
-        {
-            let symbol
-            let newPrice
+    refreshIndividualStockValue: (results) =>
+    {
+        let symbol
+        let newPrice
 
-            if (alphavantageAPIForRefresh)
-            {
-                //console.log(results)
-                // Stock symbol
-                symbol = results['Global Quote']['01. symbol']
-                // Stock Buy Price
-                newPrice = results['Global Quote']['05. price']
+        if (alphavantageAPIForRefresh)
+        {
+            //console.log(results)
+            // Stock symbol
+            symbol = results['Global Quote']['01. symbol']
+            // Stock Buy Price
+            newPrice = results['Global Quote']['05. price']
 
-            } else
-            {
-                // console.log(results)
-                // symbol = results
-                // should not run this function if using barcharts. 
-                // Due to format of data 
-                // refreshAllStockValues used
-            }
-            portfolioFn.setStockPrice(symbol, newPrice)
-
-        },
-    canAfford:
-        (amount) =>
+        } else
         {
-            return amount < portfolioFn.getCashBalance()
-        },
-    confirmStockBalance:
-        (symbol, amount) =>
-        {
-            // let index = findStockIndexInPortfolio()
-            // return portfolio.currentlyOwnedStocks[index].volume >= amount
-            return portfolioFn.getStockBalance(symbol) >= amount
-        },
-    getStockBalance:
-        (symbol) =>
-        {
-            let index = findStockIndexInPortfolio(symbol)
-            return portfolio.currentlyOwnedStocks[index].volume
+            // console.log(results)
+            // symbol = results
+            // should not run this function if using barcharts. 
+            // Due to format of data 
+            // refreshAllStockValues used
         }
+        portfolioFn.setStockPrice(symbol, newPrice)
+
+    },
+    canAfford: (amount) =>
+    {
+        return amount < portfolioFn.getCashBalance()
+    },
+    confirmStockBalance: (symbol, amount) =>
+    {
+        // let index = findStockIndexInPortfolio()
+        // return portfolio.currentlyOwnedStocks[index].volume >= amount
+        return portfolioFn.getStockBalance(symbol) >= amount
+    },
+    getStockBalance: (symbol) =>
+    {
+        let index = findStockIndexInPortfolio(symbol)
+        if (index >= 0)
+        {
+            if (portfolio.currentlyOwnedStocks[index].volume != null)
+            {
+                return portfolio.currentlyOwnedStocks[index].volume
+            }
+        } else
+        {
+            return -Infinity
+        }
+    }
 }
 
 
@@ -270,7 +275,7 @@ let chartObject =
                 type: 'timeseries'
             }
         },
-        colors: {data1:'#ffffff'},
+        colors: {data1: '#ffffff'},
         regions: [{start: '2019-08-15', end: '2020-01-07'}]
     }
 
@@ -641,10 +646,12 @@ const renderPortfolio = portfolio =>
         })
     } else
     {
-        let noStock1 = buildTableRowElement({portfolio: "You do not have any stocks in your portfolio at present =("})
+        let noStock1 = buildTableRowElement({noPortfolio: "You do not have any stocks in your portfolio at present. Use the search function to find stocks to buy and sell"})
+        noStock1.classList.add('Rtable-cell--head')
         main.append(noStock1)
-        let noStock2 = buildTableRowElement({portfolio: "Use the search function to find stocks to buy and sell"})
-        main.append(noStock2)
+        // let noStock2 = buildTableRowElement({noPortfolio: "Use the search function to find stocks to buy and sell"})
+        // noStock2.classList.add('Rtable-cell--head')
+        // main.append(noStock2)
     }
 }
 
@@ -743,6 +750,7 @@ const slideOutSellClick = (stock, amount) =>
     } else
     {
         console.log("Do not have enough to sell")
+        easyPnotify('Not enough stock to sell')
     }
 
 }
@@ -767,13 +775,13 @@ const slideOutBuyClick = (stock, amount) =>
         } else
         {
             console.log('Was not able to purchase stock due to portfolio max stock limit of ' + maxStocks)
+            easyPnotify('Was not able to purchase stock due to portfolio max stock limit of ' + maxStocks)
         }
     } else
     {
         console.log('Was not able to afford stock')
+        easyPnotify('Not enough funds to purchase stock')
     }
-
-
 }
 
 const portfolioStockClick = (event) =>
@@ -862,11 +870,6 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
         let expire = sessionStorage.getItem(queryString + "-expire")
         let now = Date.now()
         let expiryMS = now - expire
-        // console.log("expire check:"+expire)
-        // console.log("now check:"+Date.now())
-        // console.log("now < expire check:"+ (Date.now() < expire))
-        // console.log("now - expire check:"+ (Date.now() - expire))
-        // console.log(expiryMS)
         if (cache !== null && expiryMS < 0)
         {
             data = JSON.parse(cache)
@@ -874,30 +877,12 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
         } else
         {
             let results = await axios.get(queryString)
-            //let resultsData
-            // if (results.data != null)
-            // {
-            //     resultsData = results.data
-            //     console.log("API=AV")
-            //     console.log(queryString)
-            //     console.log(results)
-            //     // Specifically coded earlier on to support AlphaVantage Data Structure
-            // } else
-            // {
-            //     resultsData = results
-            //     console.log("API=BC")
-            //     console.log(queryString)
-            //     console.log(results)
-            //     // Added later to remove the dependancy on Alphavantage data Structure
-            // }
             if (results.data != null)
             {
                 sessionStorage.setItem(queryString, JSON.stringify(results.data))
                 if (cacheTime != 0)
                 {
                     let expire = now + cacheTime * 1000
-                    // console.log("Now:"+Date.now())
-                    // console.log("Expire:"+expire)
                     sessionStorage.setItem(queryString + "-expire", expire)
                 }
                 data = results.data
@@ -955,19 +940,19 @@ const setEventListeners = () =>
         slideOutSellAmount.value = ""
     })
 
-    // Total Value refresh button event listener
-    let totalValueRefresh = document.querySelector('#total-value-refresh')
-    totalValueRefresh.addEventListener('click', (e) => {
-        e.preventDefault()
-        portfolioFn.refreshTotalValue()
-    })
+    // // Total Value refresh button event listener
+    // let totalValueRefresh = document.querySelector('#total-value-refresh')
+    // totalValueRefresh.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     portfolioFn.refreshTotalValue()
+    // })
 
-    // Portfolio Button
-    let portfolioButton = document.querySelector('#portfolio')
-    portfolioButton.addEventListener('click', (e) => {
-        e.preventDefault()
-        portfolioClick()
-    })
+    // // Portfolio Button
+    // let portfolioButton = document.querySelector('#portfolio')
+    // portfolioButton.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     portfolioClick()
+    // })
 
     let onboardingButtons = document.querySelectorAll('.onboard-start-buttons')
     onboardingButtons.forEach(button => {
@@ -987,12 +972,65 @@ const setEventListeners = () =>
 
     let closeMenuButton = document.querySelector('#close-menu')
     closeMenuButton.addEventListener('click', closeMenuClick)
+
+    window.addEventListener('resize', resizeWindow);
+}
+
+let PNstackMobile = {
+    dir1: 'up', // With a dir1 of 'up', the stacks will start appearing at the bottom.
+    // Without a `dir2`, this stack will be horizontally centered, since the `dir1` axis is vertical.
+    firstpos1: 106, // The notices will appear 25 pixels from the bottom of the context.
+    spacing1: 5,
+    // Without a `spacing1`, this stack's notices will be placed 25 pixels apart.
+    push: 'top', // Each new notice will appear at the bottom of the screen, which is where the 'top' of the stack is. Other notices will be pushed up.
+    // modal: true, // When a notice appears in this stack, a modal overlay will be created.
+    overlayClose: true, // When the user clicks on the overlay, all notices in this stack will be closed.
+    context: document.getElementById('main')
+}
+
+let PNstackTablet = {
+    dir1: 'down', // With a dir1 of 'up', the stacks will start appearing at the bottom.
+    // Without a `dir2`, this stack will be horizontally centered, since the `dir1` axis is vertical.
+    firstpos1: 105, // The notices will appear 25 pixels from the bottom of the context.
+    spacing1: 5,
+    // Without a `spacing1`, this stack's notices will be placed 25 pixels apart.
+    push: 'top', // Each new notice will appear at the bottom of the screen, which is where the 'top' of the stack is. Other notices will be pushed up.
+    // modal: true, // When a notice appears in this stack, a modal overlay will be created.
+    overlayClose: true, // When the user clicks on the overlay, all notices in this stack will be closed.
+    context: document.getElementById('main')
+}
+
+let PNstackLaptop = {
+    dir1: 'down', // With a dir1 of 'up', the stacks will start appearing at the bottom.
+    // Without a `dir2`, this stack will be horizontally centered, since the `dir1` axis is vertical.
+    firstpos1: 105, // The notices will appear 25 pixels from the bottom of the context.
+    spacing1: 5,
+    // Without a `spacing1`, this stack's notices will be placed 25 pixels apart.
+    push: 'top', // Each new notice will appear at the bottom of the screen, which is where the 'top' of the stack is. Other notices will be pushed up.
+    // modal: true, // When a notice appears in this stack, a modal overlay will be created.
+    overlayClose: true, // When the user clicks on the overlay, all notices in this stack will be closed.
+    context: document.getElementById('main')
+}
+
+let notifyModel = 0
+
+const resizeWindow = () =>
+{
+    PNotify.defaults.width = window.innerWidth - 30 + 'px'
+    notifyModel = 0
+    if(window.innerWidth > 800)
+    {
+        notifyModel = 1
+    }
+    else if (window.innerWidth > 1100)
+    {
+        notifyModel = 2
+    }
+
 }
 
 const initAppSetup = () =>
 {
-
-
     PNotify.defaults.icons = 'fontawesome5';
     PNotify.defaults.width = window.innerWidth - 30 + 'px'
     PNotify.defaults.modules = {
@@ -1007,25 +1045,30 @@ const initAppSetup = () =>
             styling: false
         }
     }
-
 }
+
+
 
 const easyPnotify = (messageText) =>
 {
-    PNotify.alert({text: messageText, stack: PNstack})
+    let message = {}
+    message.text = messageText
+    if(notifyModel == 0)
+    {
+        message.stack = PNstackMobile    
+    }
+    else if(notifyModel == 1)
+    {
+        message.stack = PNstackTablet
+    }
+    else if(notifyModel == 2)
+    {
+        message.stack = PNstackLaptop
+    }
+    PNotify.alert(message)
 }
 
-let PNstack = {
-    dir1: 'up', // With a dir1 of 'up', the stacks will start appearing at the bottom.
-    // Without a `dir2`, this stack will be horizontally centered, since the `dir1` axis is vertical.
-    firstpos1: 100, // The notices will appear 25 pixels from the bottom of the context.
-    spacing1: 5,
-    // Without a `spacing1`, this stack's notices will be placed 25 pixels apart.
-    push: 'top', // Each new notice will appear at the bottom of the screen, which is where the 'top' of the stack is. Other notices will be pushed up.
-    // modal: true, // When a notice appears in this stack, a modal overlay will be created.
-    overlayClose: true, // When the user clicks on the overlay, all notices in this stack will be closed.
-    context: document.getElementById('main')
-}
+
 
 // Game Flow Functions
 
@@ -1036,12 +1079,13 @@ const beginGame = () =>
     document.querySelector('#dialog-box-parent').style.display = 'none'
     renderPortfolio(portfolio)
     portfolioFn.calcPortfolioTotalValue()
-    PNotify.alert({text: 'Welcome', stack: PNstack})
+    easyPnotify('Welcome')
     setTimeout(() => {
-        PNotify.alert({text: 'Search for stock using the search bar', stack: PNstack})
-    }, 1000)
+        easyPnotify('Search for stock using the search bar')
+    }, 2000)
 }
 
 setEventListeners()
 initAppSetup()
+resizeWindow()
 loadLocalPortfolio()
