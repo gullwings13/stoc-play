@@ -2,21 +2,33 @@
 
 :root {
     /*     color-scheme-3   */
-    --color-1: rgba(84, 109, 114, 1);
-    --color-2: rgba(137, 160, 165, 1);
-    --color-3: rgba(242, 242, 242, 1);
-    --color-4: rgba(2, 114, 114, 1);
-    --color-5: rgba(164, 188, 191, 1);
-
-    --color-6: rgba(0, 0, 0, 1);
-    --color-7: rgba(255, 255, 255, 1);
+    --color-1: #F9F871;
+    --color-2: #FFC75F;
+    --color-3: #FF9671;
+    --color-4: #FF6F91;
+    --color-5: #D65DB1;
+    --color-6: #845EC2;
+    
+    --color-7: rgba(0, 0, 0, 1);
+    --color-8: rgba(255, 255, 255, 1);
+    --color-9: rgba(200, 200, 200, 1);
+    --color-10: rgba(150, 150, 150, 1);
+    --color-11: rgba(100, 100, 100, 1);
+    --color-12: rgba(75, 75, 75, 1);
+    --color-13: rgba(50, 50, 50, 1);
+    --color-14: rgba(25, 25, 25, 1);
+    
+    --header-height: 30px;
+    --tool-box-height: 100px;
+    
+    --slide-out-border: 4px;
 }
 
 /* General Tags*/
 
 * {
     margin: 0;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 html, body {
@@ -33,8 +45,7 @@ body{
 
 header{
     display: flex;
-    background-color: #be0201;
-    height: 20px;
+    height: var(--header-height);
 }
 
 main{
@@ -64,10 +75,23 @@ button{
 
 .slide-out-row{
     display: flex;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+    order:10;
+}
+
+#slide-out-buy-price,#slide-out-sell-price {
+    color: var(--color-1);
+    font-weight: 900;
+}
+
+.slide-out-currency{
+    color: var(--color-2);
 }
 
 .slide-out-input{
-    width: 30px;
+    width: 60px;
 }
 
 .tool-box-row{
@@ -94,13 +118,13 @@ button{
     padding: 10px 10px;
     /*overflow: hidden;*/
     /*list-style: none;*/
-    border: solid 1px var(--color-1);
-    /*background: var(--color-2);*/
+    border: solid 1px var(--color-2);
+    *background: var(--color-2);
 }
 
 .Rtable-cell--head {
-    /*background-color: transparent;*/
-    /*border-color: transparent;*/
+    background-color: transparent;
+    border-color: transparent;
     /*color: var(--color-2);*/
     /*font-size: 40px;*/
     /*padding: 20px 10px;*/
@@ -111,6 +135,10 @@ button{
     /*border-color: transparent;*/
     /*font-size: 30px;*/
     /*text-transform: capitalize;*/
+}
+
+.Rtable-cell--no-border{
+    border-color: transparent;
 }
 
 /* The below CSS classes are used as object keys in my JS */
@@ -151,21 +179,30 @@ button{
 /* IDs */
 
 #tool-box{
+    position: sticky;
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    background-color: #5c37e7;
+    background-color: var(--color-6);
     flex-shrink: 0;
 }
 
 #slide-out-parent {
     position: fixed;
-    height: calc(100vh - 140px);
-    top:20px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 30px - var(--tool-box-height) - var(--header-height) - calc(var(--slide-out-border)*2));
+    top: var(--header-height);
     left: 0;
-    width: calc(100vw - 22px);
-    background-color: #40fa56;
-    border: solid 1px var(--color-1);
+    width: calc(100vw - 20px - calc(var(--slide-out-border)*2));
+    background-color: var(--color-5);
+    border: solid var(--slide-out-border) var(--color-2);
     padding: 10px 10px;
+}
+
+#slide-out-close{
+    order:20;
+    height: 10vh;
 }
 
 #dialog-box-parent{
@@ -173,10 +210,10 @@ button{
     display: none;
     flex-direction: column;
     height: calc(100vh - 140px);
-    top:20px;
+    top: var(--header-height);
     left: 0;
     width: calc(100vw - 22px);
-    background-color: #40fa56;
+    background-color: var(--color-5);
     border: solid 1px var(--color-1);
     padding: 10px 10px
 }
@@ -197,17 +234,56 @@ button{
     display: none;
 }
 
+#slide-out-title{
+    color: var(--color-1);
+    font-size: 40px;
+    font-weight: 900;
+}
+
+#slide-out-summary{
+    color: var(--color-2);
+    font-size: 20px;
+}
+
+#slide-out-amount-owned{
+    color: var(--color-9);
+}
+
+#slide-out-amount-owned-label{
+    color: var(--color-3);
+    margin: 0 5px 0 0;
+}
+
+#slide-out-amount{
+    display: flex;
+}
+
+#slide-out-buy, #slide-out-sell{
+    
+}
+
 #main{
-    background-color: #45d041;
+    background-color: var(--color-3);
     flex-grow: 1;
 }
 
 #stock-chart{
-    /*width: 90vw;*/
+    display: none;
 }
 
 #logo{
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: var(--header-height);
+    background-color: var(--color-1);
+    padding: 3px 4px;
+}
 
+#logo-text{
+    color: var(--color-3);
+    font-weight: 900;
+    font-size: 25px;
 }
 
 #search-text{

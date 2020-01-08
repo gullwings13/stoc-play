@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stock Trader</title>
+    <title>STOC PLAY</title>
     <script src="https://kit.fontawesome.com/689707eff1.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="style.css">
     <link href="c3.css" rel="stylesheet">
-    <link href="node_modules/pnotify/dist/PNotifyBrightTheme.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/pnotify/dist/PNotifyBrightTheme.css" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,900&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
     <div id="logo">
-        <a href="#">Stock Trader</a>
+        <a href="#" id="logo-text">STOC PLAY</a>
     </div>
 </header>
 <div id="main">
@@ -23,39 +24,44 @@
     <div id="slide-out-parent" class="hidden">
         <div id="slide-out-title"></div>
         <div id="slide-out-summary"></div>
-        <div id="slide-out-amount-owned"></div>
+        <div id="slide-out-amount">
+            <div id="slide-out-amount-owned-label">Shares owned:</div>
+            <div id="slide-out-amount-owned"></div>
+        </div>
         <div class="slide-out-row">
             <div id="slide-out-buy-price"></div>
             <div class="slide-out-currency"></div>
-            <label class="slide-out-amount-label">Buy Amount:</label>
-            <input class="slide-out-input" id="slide-out-buy-amount">
+<!--            <label class="slide-out-amount-label">Buy Amount:</label>-->
+            <input class="slide-out-input" id="slide-out-buy-amount" placeholder="Amount">
             <button id="slide-out-buy">Buy</button>
         </div>
         <div class="slide-out-row">
             <div id="slide-out-sell-price"></div>
             <div class="slide-out-currency"></div>
-            <label class="slide-out-amount-label">Sell Amount:</label>
-            <input class="slide-out-input" id="slide-out-sell-amount">
+<!--            <label class="slide-out-amount-label">Sell Amount:</label>-->
+            <input class="slide-out-input" id="slide-out-sell-amount" placeholder="Amount">
             <button id="slide-out-sell">Sell</button>
         </div>
+        <div id="stock-chart"></div>
         <div id="slide-out-inner">
         </div>
-        <div id="stock-chart"></div>
-        <div id="slide-out-close">
+
+        <button id="slide-out-close">
             Close
-        </div>
+        </button>
     </div>
     <div id="dialog-box-parent">
         <div id="onboarding">
             <div>Welcome</div>
             <p>Stock trader allows you to gain confidence in the stock market by allowing you to invest money virtually.
                 Track your progress over several days. You can restart the game at any time via the X menu.</p>
-            <p>Please select a starting amount of money. Higher starting values unlock as you reach certain milestones</p>
+            <p>Please select a starting amount of money. Higher starting values unlock as you reach certain
+                milestones</p>
             <button class="onboard-start-buttons" data-amount='5000'>$5,000</button>
             <button class="onboard-start-buttons" data-amount='20000' disabled>$20,000</button>
             <button class="onboard-start-buttons" data-amount='100000' disabled>$100,000</button>
-<!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
-<!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
+            <!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
+            <!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
         </div>
         <div id="main-menu">
             <div>Main Menu</div>
