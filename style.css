@@ -525,6 +525,10 @@ button:hover {
     #main{
         order:3
     }
+
+    #logo-text {
+        font-size: 40px;
+    }
 }
 
 
