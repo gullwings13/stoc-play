@@ -11,9 +11,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/style.css" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/style.css" />
       </list>
     </option>
   </component>
@@ -71,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1578192695227</updated>
       <workItem from="1578192699643" duration="86543000" />
-      <workItem from="1578521547737" duration="6938000" />
+      <workItem from="1578521547737" duration="12861000" />
     </task>
     <servers />
   </component>
@@ -161,5 +161,17 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="746" y="211" width="672" height="678" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1578330883020" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>293</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

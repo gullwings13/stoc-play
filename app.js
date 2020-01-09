@@ -330,6 +330,11 @@ const prepareDataForChart = (dataForPrep) =>
     currentChartData = dataForPrep['Meta Data']["2. Symbol"]
 }
 
+const resizeChart = (x,y) =>
+{
+    c3ChartRef.resize({height:y, width:x})
+}
+
 //chart.data.columns = prepareDataForChart(data)
 
 
@@ -368,7 +373,7 @@ const returnTextAtSpecificLength = (text, length) =>
 
 }
 
-const closeSearch = () =>
+const returnToPortfolio = () =>
 {
     renderPortfolio(portfolio)
 }
@@ -549,67 +554,27 @@ const renderSearchResults = results =>
     returnToPortfolio.classList.add('Rtable-cell--head')
     returnToPortfolio.style.alignSelf = 'center'
     main.append(returnToPortfolio)
-    document.querySelector('#close-search').addEventListener('click',closeSearch)
+    document.querySelector('#close-search').addEventListener('click',returnToPortfolio)
 }
 
 const renderQuoteResults = results =>
 {
-
-    // Specifically for when someone clicks on a search result
-    // console.log("render quote results")
     currentSelectedStock = {}
-    console.log(results)
-    // Stock symbol
-    // let slideOutTitle = document.querySelector('#slide-out-title')
     currentSelectedStock.symbol = results['Global Quote']['01. symbol']
-    // slideOutTitle.innerHTML = currentSelectedStock.symbol
-
-    // Stock Company Name
-    // let slideOutSummary = document.querySelector('#slide-out-summary')
     let symbolNameIndex = currentSearchSymbolLookup[results['Global Quote']['01. symbol']]
     let symbolName = currentSearchedStocks[symbolNameIndex]['2. name']
     currentSelectedStock.name = symbolName
-    // slideOutSummary.innerHTML = currentSelectedStock.name
-
-    // Stock owned
-    // let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     let index = findStockIndexInPortfolio(currentSelectedStock.symbol)
      let volume = 0
     if (index >= 0)
     {
-    //     getNews(currentSelectedStock.name)
         volume = portfolio.currentlyOwnedStocks[index].volume
-    //     document.querySelector('#stock-chart').style.display = 'inline'
-    //     getTimeSeries(currentSelectedStock.symbol)
-    } else
-    {
-        // hide chart if no stock owned
-        // mainly to keep API calls low 
-        // document.querySelector('#stock-chart').style.display = 'none'
-        // document.querySelector('#stock-new-title').style.display = 'none'
-        // document.querySelector('#slide-out-inner').style.display = 'none'
     }
     currentSelectedStock.volume = volume
-    // slideOutAmountOwned.innerHTML = currentSelectedStock.volume
-
-
-    // Currency
-    // let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     let symbolCurrency = currentSearchedStocks[symbolNameIndex]['8. currency']
     currentSelectedStock.currency = symbolCurrency
-    // slideOutCurrencyList.forEach(slideOutCurrency => {
-    //     slideOutCurrency.innerHTML = currentSelectedStock.currency
-    // })
-
-    // Stock Buy Price
-    // let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     currentSelectedStock.price = results['Global Quote']['05. price']
-    // slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
-
-    // Stock Sell Price
-    // let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
-    // slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
-
+    
     renderStock(currentSelectedStock)
 }
 
@@ -617,10 +582,7 @@ const renderPortfolio = portfolio =>
 {
     portfolioFn.refreshTotalValue()
     let cashDiv = document.querySelector("#cash")
-    // let totalValueDiv = document.querySelector("#total-value")
     cashDiv.innerHTML = formatCurrencyText(portfolioFn.getCashBalance())
-    //totalValueDiv.innerHTML = portfolioFn.getTotalValue()
-    // update total value in another location
 
     let main = document.querySelector('#main-results')
     main.innerHTML = ""
@@ -632,6 +594,7 @@ const renderPortfolio = portfolio =>
     let headerRowElementObject = {
         portfolioSymbol: "Symbol",
         portfolioName: "Company",
+        portfolioSingleValue: "Single Value",
         portfolioValue: "Total Value",
         portfolioVolume: "#"
     }
@@ -655,6 +618,7 @@ const renderPortfolio = portfolio =>
                 domDataSet3: ['index', index],
                 portfolioSymbol: ownedStock.stock.symbol,
                 portfolioName: ownedStock.stock.name,
+                portfolioSingleValue: formatCurrencyText(ownedStock.singleValue),
                 portfolioValue: formatCurrencyText(ownedStock.totalValue),
                 portfolioVolume: ownedStock.volume
             }
@@ -677,44 +641,11 @@ const renderPortfolioStock = (selectedStock) =>
 {
     currentSelectedStock = {}
 
-    // Stock symbol
-    // let slideOutTitle = document.querySelector('#slide-out-title')
     currentSelectedStock.symbol = selectedStock.stock.symbol
-    // slideOutTitle.innerHTML = currentSelectedStock.symbol
-
-    // Stock Company Name
-    // let slideOutSummary = document.querySelector('#slide-out-summary')
     currentSelectedStock.name = selectedStock.stock.name
-    // slideOutSummary.innerHTML = currentSelectedStock.name
-
-    // Stock owned
-    // let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     currentSelectedStock.volume = selectedStock.volume
-    // slideOutAmountOwned.innerHTML = currentSelectedStock.volume
-
-    // display chart and update its data
-    // document.querySelector('#stock-chart').style.display = 'inline'
-    // getTimeSeries(currentSelectedStock.symbol)
-
-    // let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     currentSelectedStock.currency = selectedStock.currency
-    // slideOutCurrencyList.forEach(slideOutCurrency => {
-    //     slideOutCurrency.innerHTML = currentSelectedStock.currency
-    // })
-
-    // Stock Buy Price
-    // let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     currentSelectedStock.price = selectedStock.singleValue
-    // slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
-
-    // Stock Sell Price
-    // let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
-    // slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
-
-    //console.log("here!!!!")
-
-    // document.querySelector('#stock-new-title').classList.add('hidden')
-    // document.querySelector('#slide-out-inner').classList.add('hidden')
 
     renderStock(currentSelectedStock)
 }
@@ -730,7 +661,7 @@ const renderStock = (currentlySelectedStock) =>
     let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     slideOutAmountOwned.innerHTML = currentlySelectedStock.volume
 
-    document.querySelector('#stock-chart').style.display = 'inline'
+    document.querySelector('#stock-chart').style.display = 'flex'
     getTimeSeries(currentlySelectedStock.symbol)
     
     let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
@@ -1032,6 +963,9 @@ const setEventListeners = () =>
     let closeMenuButton = document.querySelector('#close-menu')
     closeMenuButton.addEventListener('click', closeMenuClick)
 
+    let logo = document.querySelector('#logo-text')
+    logo.addEventListener('click',returnToPortfolio)
+    
     window.addEventListener('resize', resizeWindow);
 }
 
@@ -1077,14 +1011,21 @@ const resizeWindow = () =>
 {
     PNotify.defaults.width = window.innerWidth - 30 + 'px'
     notifyModel = 0
-    if(window.innerWidth > 800)
+    let chartX = window.innerWidth/5*4
+    let chartY = 240
+    if(window.innerWidth > 800 && window.innerWidth < 1099)
     {
         notifyModel = 1
+        chartX = window.innerWidth/5*4
     }
     else if (window.innerWidth > 1100)
     {
         notifyModel = 2
+        chartX = window.innerWidth/4
     }
+    console.log('innerwidth:'+window.innerWidth)
+    console.log(chartX)
+    resizeChart(chartX,chartY)
 
 }
 
