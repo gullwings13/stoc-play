@@ -106,7 +106,7 @@ let portfolioFn = {
             {
                 portfolio.currentlyOwnedStocks.forEach(ownedStock => {
                     let queryString = buildQuoteQueryString(ownedStock.stock.symbol)
-                    collectResults(queryString, portfolioFn.refreshIndividualStockValue)
+                    collectResults(queryString, portfolioFn.refreshIndividualStockValue,600)
                 })
             } else
             {
@@ -124,7 +124,7 @@ let portfolioFn = {
                 })
                 let queryString = buildBCQuoteQueryString(symbolString)
                 //console.log(queryString)
-                collectResults(queryString, portfolioFn.refreshAllStockValues)
+                collectResults(queryString, portfolioFn.refreshAllStockValues, 600)
             }
         } else
         {
@@ -368,6 +368,11 @@ const returnTextAtSpecificLength = (text, length) =>
 
 }
 
+const closeSearch = () =>
+{
+    renderPortfolio(portfolio)
+}
+
 const buildTableRowElement = (tableElementObject) =>
 {
     let rowElement = document.createElement('div')
@@ -471,7 +476,7 @@ const getTimeSeries = (symbol) =>
 {
     let queryString = buildDailyTimeSeriesQueryString(symbol)
     //console.log(queryString)
-    collectResults(queryString, prepareDataForChart, 3600)
+    collectResults(queryString, prepareDataForChart, 60000)
 }
 
 const buildQuoteQueryString = (symbol) =>
@@ -497,7 +502,7 @@ const buildNewsQueryString = (searchTerms) =>
 const getNews = (searchTerms) =>
 {
     let queryString = buildNewsQueryString(searchTerms)
-    collectResults(queryString, renderNewsForSymbol)
+    collectResults(queryString, renderNewsForSymbol, 36000)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -511,7 +516,8 @@ const renderSearchResults = results =>
     currentSearchedStocks = results.bestMatches;
     let index = 0
     currentSearchSymbolLookup = {}
-    let stockSearchHeader = buildTableRowElement({searchHeader: "Search results"})
+    let stockSearchHeader = buildTableRowElement({portfolioHeader: "Search results"})
+    stockSearchHeader.classList.add('Rtable-cell--head')
     main.append(stockSearchHeader)
 
     // console.log(results)
@@ -534,65 +540,77 @@ const renderSearchResults = results =>
     } else
     {
         let noResults1 = buildTableRowElement({portfolio: "There were no search results for that query"})
+        noResults1.classList.add('Rtable-cell--head')
         main.append(noResults1)
     }
+    let returnToPortfolio = buildTableRowElement({portfolio: ""})
+    returnToPortfolio.innerHTML = "<button id='close-search'>Close Search</button>"
+    
+    returnToPortfolio.classList.add('Rtable-cell--head')
+    returnToPortfolio.style.alignSelf = 'center'
+    main.append(returnToPortfolio)
+    document.querySelector('#close-search').addEventListener('click',closeSearch)
 }
 
 const renderQuoteResults = results =>
 {
 
     // Specifically for when someone clicks on a search result
-
+    // console.log("render quote results")
     currentSelectedStock = {}
     console.log(results)
     // Stock symbol
-    let slideOutTitle = document.querySelector('#slide-out-title')
+    // let slideOutTitle = document.querySelector('#slide-out-title')
     currentSelectedStock.symbol = results['Global Quote']['01. symbol']
-    slideOutTitle.innerHTML = currentSelectedStock.symbol
+    // slideOutTitle.innerHTML = currentSelectedStock.symbol
 
     // Stock Company Name
-    let slideOutSummary = document.querySelector('#slide-out-summary')
+    // let slideOutSummary = document.querySelector('#slide-out-summary')
     let symbolNameIndex = currentSearchSymbolLookup[results['Global Quote']['01. symbol']]
     let symbolName = currentSearchedStocks[symbolNameIndex]['2. name']
     currentSelectedStock.name = symbolName
-    slideOutSummary.innerHTML = currentSelectedStock.name
+    // slideOutSummary.innerHTML = currentSelectedStock.name
 
     // Stock owned
-    let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
+    // let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     let index = findStockIndexInPortfolio(currentSelectedStock.symbol)
-    let volume = 0
+     let volume = 0
     if (index >= 0)
     {
+    //     getNews(currentSelectedStock.name)
         volume = portfolio.currentlyOwnedStocks[index].volume
-        document.querySelector('#stock-chart').style.display = 'inline'
-        getTimeSeries(currentSelectedStock.symbol)
+    //     document.querySelector('#stock-chart').style.display = 'inline'
+    //     getTimeSeries(currentSelectedStock.symbol)
     } else
     {
         // hide chart if no stock owned
         // mainly to keep API calls low 
-        document.querySelector('#stock-chart').style.display = 'none'
+        // document.querySelector('#stock-chart').style.display = 'none'
+        // document.querySelector('#stock-new-title').style.display = 'none'
+        // document.querySelector('#slide-out-inner').style.display = 'none'
     }
     currentSelectedStock.volume = volume
-    slideOutAmountOwned.innerHTML = currentSelectedStock.volume
+    // slideOutAmountOwned.innerHTML = currentSelectedStock.volume
 
 
     // Currency
-    let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
+    // let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     let symbolCurrency = currentSearchedStocks[symbolNameIndex]['8. currency']
     currentSelectedStock.currency = symbolCurrency
-    slideOutCurrencyList.forEach(slideOutCurrency => {
-        slideOutCurrency.innerHTML = currentSelectedStock.currency
-    })
+    // slideOutCurrencyList.forEach(slideOutCurrency => {
+    //     slideOutCurrency.innerHTML = currentSelectedStock.currency
+    // })
 
     // Stock Buy Price
-    let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
+    // let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     currentSelectedStock.price = results['Global Quote']['05. price']
-    slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
+    // slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
 
     // Stock Sell Price
-    let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
-    slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
+    // let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
+    // slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
 
+    renderStock(currentSelectedStock)
 }
 
 const renderPortfolio = portfolio =>
@@ -660,43 +678,75 @@ const renderPortfolioStock = (selectedStock) =>
     currentSelectedStock = {}
 
     // Stock symbol
-    let slideOutTitle = document.querySelector('#slide-out-title')
+    // let slideOutTitle = document.querySelector('#slide-out-title')
     currentSelectedStock.symbol = selectedStock.stock.symbol
-    slideOutTitle.innerHTML = currentSelectedStock.symbol
+    // slideOutTitle.innerHTML = currentSelectedStock.symbol
 
     // Stock Company Name
-    let slideOutSummary = document.querySelector('#slide-out-summary')
+    // let slideOutSummary = document.querySelector('#slide-out-summary')
     currentSelectedStock.name = selectedStock.stock.name
-    slideOutSummary.innerHTML = currentSelectedStock.name
+    // slideOutSummary.innerHTML = currentSelectedStock.name
 
     // Stock owned
-    let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
+    // let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     currentSelectedStock.volume = selectedStock.volume
-    slideOutAmountOwned.innerHTML = currentSelectedStock.volume
+    // slideOutAmountOwned.innerHTML = currentSelectedStock.volume
 
     // display chart and update its data
-    document.querySelector('#stock-chart').style.display = 'inline'
-    getTimeSeries(currentSelectedStock.symbol)
+    // document.querySelector('#stock-chart').style.display = 'inline'
+    // getTimeSeries(currentSelectedStock.symbol)
 
-    let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
+    // let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     currentSelectedStock.currency = selectedStock.currency
-    slideOutCurrencyList.forEach(slideOutCurrency => {
-        slideOutCurrency.innerHTML = currentSelectedStock.currency
-    })
+    // slideOutCurrencyList.forEach(slideOutCurrency => {
+    //     slideOutCurrency.innerHTML = currentSelectedStock.currency
+    // })
 
     // Stock Buy Price
-    let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
+    // let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     currentSelectedStock.price = selectedStock.singleValue
-    slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
+    // slideOutBuyPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
 
     // Stock Sell Price
-    let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
-    slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
+    // let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
+    // slideOutSellPrice.innerHTML = formatCurrencyText(currentSelectedStock.price)
 
     //console.log("here!!!!")
 
-    getNews(currentSelectedStock.name)
+    // document.querySelector('#stock-new-title').classList.add('hidden')
+    // document.querySelector('#slide-out-inner').classList.add('hidden')
+
+    renderStock(currentSelectedStock)
 }
+
+const renderStock = (currentlySelectedStock) =>
+{
+    let slideOutTitle = document.querySelector('#slide-out-title')
+    slideOutTitle.innerHTML = currentlySelectedStock.symbol
+    
+    let slideOutSummary = document.querySelector('#slide-out-summary')
+    slideOutSummary.innerHTML = currentlySelectedStock.name
+    
+    let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
+    slideOutAmountOwned.innerHTML = currentlySelectedStock.volume
+
+    document.querySelector('#stock-chart').style.display = 'inline'
+    getTimeSeries(currentlySelectedStock.symbol)
+    
+    let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
+    slideOutCurrencyList.forEach(slideOutCurrency => {
+        slideOutCurrency.innerHTML = currentlySelectedStock.currency
+    })
+
+    let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
+    slideOutBuyPrice.innerHTML = formatCurrencyText(currentlySelectedStock.price)
+    
+    let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
+    slideOutSellPrice.innerHTML = formatCurrencyText(currentlySelectedStock.price)
+
+    getNews(currentlySelectedStock.name)
+}
+
 
 const renderNewsForSymbol = (results) =>
 {
@@ -704,10 +754,14 @@ const renderNewsForSymbol = (results) =>
     let newsPlace = document.querySelector('#slide-out-inner')
     if (results.articles.length > 1)
     {
+        document.querySelector('#stock-new-title').classList.remove('hidden')
+        document.querySelector('#slide-out-inner').classList.remove('hidden')
         newsPlace.innerHTML = `<div class='stock-news-title'>${results.articles[0].source.name}</div> <div class='stock-news-link'><a href='${results.articles[0].url}'> ${results.articles[0].title} </a></div>`
         newsPlace.innerHTML += `<div class='stock-news-title'>${results.articles[1].source.name}</div> <div class='stock-news-link'><a href='${results.articles[1].url}'> ${results.articles[1].title} </a></div>`
     } else if (results.articles.length > 0)
     {
+        document.querySelector('#stock-new-title').classList.remove('hidden')
+        document.querySelector('#slide-out-inner').classList.remove('hidden')
         newsPlace.innerHTML = `<div class='stock-news-title'>${results.articles[0].source.name}</div> <div class='stock-news-link'><a href='${results.articles[0].url}'> ${results.articles[0].title} </a></div>`
     }
 }
@@ -743,9 +797,11 @@ const slideOutSellClick = (stock, amount) =>
         if (findStockIndexInPortfolio(soldStock.stock.symbol) >= 0)
         {
             document.querySelector("#slide-out-amount-owned").innerHTML = portfolioFn.getStockBalance(soldStock.stock.symbol)
+            easyPnotify('You successfully sold some your stock for this symbol')
         } else
         {
             document.querySelector("#slide-out-amount-owned").innerHTML = 0
+            easyPnotify('You successfully sold all your stock for this symbol')
         }
     } else
     {
@@ -772,6 +828,7 @@ const slideOutBuyClick = (stock, amount) =>
             saveLocalPortfolio()
             renderPortfolio(portfolio)
             document.querySelector("#slide-out-amount-owned").innerHTML = portfolioFn.getStockBalance(purchasedStock.stock.symbol)
+            easyPnotify('Congratz on buying some stock!')
         } else
         {
             console.log('Was not able to purchase stock due to portfolio max stock limit of ' + maxStocks)
@@ -807,7 +864,7 @@ const searchButtonClick = symbolSearchText =>
 {
     // https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Micro&apikey=SI7NQQ7U40XVI2K7
     let queryString = `${baseURL}${searchFunction}${searchKeyword}${symbolSearchText}${apiKey}`
-    collectResults(queryString, renderSearchResults)
+    collectResults(queryString, renderSearchResults, 60000)
 }
 
 const portfolioClick = () =>
@@ -900,8 +957,10 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
     } catch (error)
     {
         console.log(error)
+        easyPnotify("Ruh Roh. Could not get the data dawg.")
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 

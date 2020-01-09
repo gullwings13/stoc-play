@@ -12,12 +12,14 @@ DONE - Allow user to see current value of portfolio (via refresh button)
 DONE - Limit max stocks to 2
 DONE - Remove stock when value goes to zero
 DONE - Cannot see how many stocks are owned when clicking on stock
+DONE - Get back to own portfolio from search screen
+
+
 
 Working on:
 
 
 What is not completed:
-- Get back to own portfolio from search screen
 - Add transaction history
 - See graph of own portfolio value
 - see graph of individual stock value

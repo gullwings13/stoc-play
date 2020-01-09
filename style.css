@@ -63,8 +63,8 @@
 
     --header-height: 30px;
     --tool-box-height: 100px;
-    --notify-position: bottom;
-    --notify-distance: 100px;
+    /*--notify-position: bottom;*/
+    /*--notify-distance: 100px;*/
     --slide-out-border: 4px;
 }
 
@@ -134,7 +134,7 @@ button:hover {
 
 .slide-out-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 70px;
     align-items: center;
     order: 10;
@@ -143,14 +143,17 @@ button:hover {
 #slide-out-buy-price, #slide-out-sell-price {
     color: var(--color-1);
     font-weight: 900;
+    margin: 0 10px;
 }
 
 .slide-out-currency {
     color: var(--color-2);
+    margin: 0 10px 0 0;
 }
 
 .slide-out-input {
     width: 60px;
+    margin: 0 10px;
 }
 
 .tool-box-row {
@@ -300,6 +303,32 @@ button:hover {
     color: var(--color-5a);
 }
 
+#stock-new-title{
+    font-weight: 900;
+    color: var(--color-1);
+}
+
+.stock-news-title{
+    color: var(--color-2);
+    padding: 0 0 0 10px;
+    
+}
+
+.stock-news-link{
+    margin-bottom: 10px;
+    padding: 5px 0 5px 20px;
+}
+
+.stock-news-link a{
+    color: var(--color-3);
+    border-bottom: 5px var(--color-5a) dashed;
+    
+}
+
+.stock-news-link a:hover{
+    border-bottom: 5px var(--color-3) solid;
+}
+
 /* IDs */
 
 #tool-box {
@@ -410,7 +439,8 @@ button:hover {
 
 #slide-out-buy, #slide-out-sell {
     width: 60px;
-    height: 60px;
+    height: 40px;
+    /*margin: 0 0 0 10px;*/
 }
 
 #main {
@@ -438,9 +468,10 @@ button:hover {
 }
 
 #search-text, #slide-out-buy-amount, #slide-out-sell-amount { 
-    width: 100px;
+    width: 150px;
     height: 30px;
-    font-size: 20px;
+    font-size: 16px;
+    text-align: center;
 }
 
 #search-button {
@@ -482,7 +513,9 @@ button:hover {
     
     #search-text{
         width: 200px;
-        flex-shrink: 2;
+        /*flex-shrink: 2;*/
+        font-size: 20px;
+        text-align: left;
     }
     
     #menu-button{
