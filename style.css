@@ -584,6 +584,26 @@ svg {
     #logo-text {
         font-size: 40px;
     }
+
+    #slide-out-close{
+        order: -1;
+        width: 100px;
+        align-self: flex-end;
+        position: absolute;
+    }
+
+    #slide-out-title {
+        width: 50%;
+    }
+
+    #slide-out-summary {
+        width: 50%;
+    }
+
+    #slide-out-amount {
+        width: 50%;
+    }
+    
 }
 
 

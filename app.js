@@ -188,8 +188,7 @@ const formatCurrencyText = (amount) =>
 {
     amount = parseFloat(amount)
     let currencyFormatOptions = {currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2}
-    let returnText = "$" + amount.toLocaleString('en-US', currencyFormatOptions)
-    return returnText
+    return "$" + amount.toLocaleString('en-US', currencyFormatOptions)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -349,6 +348,7 @@ const returnTextAtSpecificLength = (text, length) =>
 
 const returnToPortfolio = () =>
 {
+    closeSlideOutClick()
     renderPortfolio(portfolio)
 }
 
@@ -763,8 +763,10 @@ const searchButtonClick = symbolSearchText =>
 
 const menuClick = () =>
 {
-    document.querySelector('#dialog-box-parent').style.display = 'flex'
-    document.querySelector('#main-menu').style.display = 'flex'
+    // document.querySelector('#dialog-box-parent').style.display = 'flex'
+    // document.querySelector('#main-menu').style.display = 'flex'
+    document.querySelector('#dialog-parent').classList.remove('hidden')
+    document.querySelector('#main-menu').classList.remove('hidden')
 }
 
 const restartGameClick = () =>
@@ -772,15 +774,27 @@ const restartGameClick = () =>
     deleteLocalPortfolio()
     gameInProgress = false
     loadLocalPortfolio()
-    document.querySelector('#dialog-box-parent').style.display = 'flex'
-    document.querySelector('#onboarding').style.display = 'flex'
-    document.querySelector('#main-menu').style.display = 'none'
+    // document.querySelector('#dialog-box-parent').style.display = 'flex'
+    // document.querySelector('#onboarding').style.display = 'flex'
+    // document.querySelector('#main-menu').style.display = 'none'
+    showOnboardingCloseMainMenu()
+
+
 }
+
+const showOnboardingCloseMainMenu = () =>
+{
+    document.querySelector('#dialog-box-parent').classList.remove('hidden')
+    document.querySelector('#onboarding').classList.remove('hidden')
+    document.querySelector('#main-menu').classList.add('hidden')
+}
+
 
 const closeMenuClick = () =>
 {
-    document.querySelector('#dialog-box-parent').style.display = 'none'
-    document.querySelector('#main-menu').style.display = 'none'
+    document.querySelector('#dialog-parent').classList.add('hidden')
+    // document.querySelector('#dialog-box-parent').style.display = 'none'
+    // document.querySelector('#main-menu').style.display = 'none'
 }
 
 //////////////////////////////////////////////////////////////////////////
