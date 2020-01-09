@@ -1023,8 +1023,8 @@ const resizeWindow = () =>
         notifyModel = 2
         chartX = window.innerWidth/4
     }
-    console.log('innerwidth:'+window.innerWidth)
-    console.log(chartX)
+    //console.log('innerwidth:'+window.innerWidth)
+    //console.log(chartX)
     resizeChart(chartX,chartY)
 
 }
