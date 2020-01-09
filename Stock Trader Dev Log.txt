@@ -13,6 +13,13 @@ DONE - Limit max stocks to 2
 DONE - Remove stock when value goes to zero
 DONE - Cannot see how many stocks are owned when clicking on stock
 DONE - Get back to own portfolio from search screen
+DONE - see graph of individual stock value
+DONE - No confirmation if shown after buying stocks
+DONE - No checks on if has enough cash
+DONE - No checks on if has any stocks to sell
+DONE - Cannot see new amount of stock on purchase screen
+DONE - Round stock display value
+DONE - Round stock purchase and sell amounts
 
 
 
@@ -22,13 +29,8 @@ Working on:
 What is not completed:
 - Add transaction history
 - See graph of own portfolio value
-- see graph of individual stock value
 
 
 What issues are there:
-- No confirmation if shown after buying stocks
-- Cannot see new amount of stock on purchase screen
-- No checks on if has enough cash
-- No checks on if has any stocks to sell
-- Round stock display value
-- Round stock purchase and sell amounts
+- background color of chart
+- move close button on desktop version to top
