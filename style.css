@@ -296,7 +296,7 @@ button:hover {
 }
 
 .onboard-start-buttons{
-    margin: 50px;
+    margin: 1vh;
     height: 60px;
     color: var(--color-1);
     font-size: 40px;
@@ -383,7 +383,7 @@ button:hover {
     background-color: var(--color-5);
     border: solid var(--slide-out-border) var(--color-1);
     padding: 10px 10px;
-    z-index: 100;
+    z-index: 200;
 }
 
 #main-menu {
@@ -409,7 +409,7 @@ button:hover {
     display: none;
 }
 
-#main-menu {
+#main-menu.hidden {
     display: none;
 }
 
