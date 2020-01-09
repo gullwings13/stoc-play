@@ -98,7 +98,6 @@ let portfolioFn = {
     },
     refreshTotalValue: () =>
     {
-        //console.log("refreshing value")
         if (portfolio.currentlyOwnedStocks.length > 0)
         {
 
@@ -106,7 +105,7 @@ let portfolioFn = {
             {
                 portfolio.currentlyOwnedStocks.forEach(ownedStock => {
                     let queryString = buildQuoteQueryString(ownedStock.stock.symbol)
-                    collectResults(queryString, portfolioFn.refreshIndividualStockValue,600)
+                    collectResults(queryString, portfolioFn.refreshIndividualStockValue, 600)
                 })
             } else
             {
@@ -123,20 +122,18 @@ let portfolioFn = {
                     index++
                 })
                 let queryString = buildBCQuoteQueryString(symbolString)
-                //console.log(queryString)
+
                 collectResults(queryString, portfolioFn.refreshAllStockValues, 600)
             }
         } else
         {
-            //     portfolioFn.calcPortfolioTotalValue()
+            // not stocks owned
         }
 
     },
     refreshAllStockValues: (results) =>
     {
-        //console.log(results)
         results.results.forEach(symbol => {
-            //console.log(symbol.symbol)
             portfolioFn.setStockPrice(symbol.symbol, symbol.lastPrice)
         })
         portfolioFn.calcPortfolioTotalValue()
@@ -148,7 +145,6 @@ let portfolioFn = {
 
         if (alphavantageAPIForRefresh)
         {
-            //console.log(results)
             // Stock symbol
             symbol = results['Global Quote']['01. symbol']
             // Stock Buy Price
@@ -156,8 +152,6 @@ let portfolioFn = {
 
         } else
         {
-            // console.log(results)
-            // symbol = results
             // should not run this function if using barcharts. 
             // Due to format of data 
             // refreshAllStockValues used
@@ -171,8 +165,6 @@ let portfolioFn = {
     },
     confirmStockBalance: (symbol, amount) =>
     {
-        // let index = findStockIndexInPortfolio()
-        // return portfolio.currentlyOwnedStocks[index].volume >= amount
         return portfolioFn.getStockBalance(symbol) >= amount
     },
     getStockBalance: (symbol) =>
@@ -197,8 +189,6 @@ const formatCurrencyText = (amount) =>
     amount = parseFloat(amount)
     let currencyFormatOptions = {currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2}
     let returnText = "$" + amount.toLocaleString('en-US', currencyFormatOptions)
-    // console.log("formatted text input:"+amount)
-    // console.log("formatted text:"+returnText)
     return returnText
 }
 
@@ -292,18 +282,13 @@ let currentChartData = 'data1'
 
 const prepareDataForChart = (dataForPrep) =>
 {
-    // let metaData = dataForPrep['Meta Data']
-    // delete dataForPrep['Meta Data']
-    //console.log("Data for prep")
-    //console.log(dataForPrep)
+
 
     data = dataForPrep['Time Series (Daily)']
     let axisArray = ['date']
     let dataArray = [dataForPrep['Meta Data']["2. Symbol"]]
     Object.keys(dataForPrep['Time Series (Daily)']).forEach(date => {
-        //console.log(date)
         axisArray.push(date)
-        //console.log(parseFloat(data[date]["4. close"]))
         dataArray.push(parseFloat(data[date]["4. close"]))
     })
 
@@ -317,25 +302,14 @@ const prepareDataForChart = (dataForPrep) =>
     columns['colors'] = {}
     columns['colors'][dataForPrep['Meta Data']["2. Symbol"]] = '#ffffff'
 
-    // let columns2 = {
-    //     columns: [
-    //         ['data1', 130, 120, 150, 140, 160, 150],
-    //         ['data4', 30, 20, 50, 40, 60, 50],
-    //     ],
-    //     unload: ['data2', 'data3'],
-    // }
-
-    //console.log(columns)
     c3ChartRef.load(columns)
     currentChartData = dataForPrep['Meta Data']["2. Symbol"]
 }
 
-const resizeChart = (x,y) =>
+const resizeChart = (x, y) =>
 {
-    c3ChartRef.resize({height:y, width:x})
+    c3ChartRef.resize({height: y, width: x})
 }
-
-//chart.data.columns = prepareDataForChart(data)
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -413,12 +387,8 @@ function findStockIndexInPortfolio(symbol)
     let stockToFindIndex = -1
     let index = 0
     portfolio.currentlyOwnedStocks.forEach(ownedStock => {
-        // console.log("ownedStock.stock.symbol")
-        // console.log(ownedStock.stock.symbol)
-        // console.log(symbol)
         if (ownedStock.stock.symbol == symbol)
         {
-            // console.log("found symbol")
             stockToFindIndex = index
         }
         index++
@@ -428,10 +398,7 @@ function findStockIndexInPortfolio(symbol)
 
 const addStock = (stockToAdd) =>
 {
-    // console.log("add stock")
-    // console.log(stockToAdd.stock.symbol)
     let index = findStockIndexInPortfolio(stockToAdd.stock.symbol)
-    // console.log("index:"+index)
     let returnValue = -1
     if (index >= 0)
     {
@@ -450,21 +417,15 @@ const addStock = (stockToAdd) =>
         portfolio.currentlyOwnedStocks.push(stockToAdd)
         returnValue = 1
     }
-    // console.log("return value:"+returnValue)
 
     return returnValue
 }
 
 const removeStock = (stockToRemove) =>
 {
-
-    // console.log('removeStock')
-    // console.log(stockToRemove)
-    // console.log(portfolio.currentlyOwnedStocks)
     let stockIndex = findStockIndexInPortfolio(stockToRemove.stock.symbol)
     if (stockIndex >= 0)
     {
-        // console.log('removing stock')
         portfolio.currentlyOwnedStocks[stockIndex].volume -= stockToRemove.volume
         if (portfolio.currentlyOwnedStocks[stockIndex].volume <= 0)
         {
@@ -480,7 +441,6 @@ const removeStock = (stockToRemove) =>
 const getTimeSeries = (symbol) =>
 {
     let queryString = buildDailyTimeSeriesQueryString(symbol)
-    //console.log(queryString)
     collectResults(queryString, prepareDataForChart, 60000)
 }
 
@@ -525,7 +485,6 @@ const renderSearchResults = results =>
     stockSearchHeader.classList.add('Rtable-cell--head')
     main.append(stockSearchHeader)
 
-    // console.log(results)
     if (results.bestMatches.length > 0)
     {
         results.bestMatches.forEach(match => {
@@ -548,13 +507,13 @@ const renderSearchResults = results =>
         noResults1.classList.add('Rtable-cell--head')
         main.append(noResults1)
     }
-    let returnToPortfolio = buildTableRowElement({portfolio: ""})
-    returnToPortfolio.innerHTML = "<button id='close-search'>Close Search</button>"
-    
-    returnToPortfolio.classList.add('Rtable-cell--head')
-    returnToPortfolio.style.alignSelf = 'center'
-    main.append(returnToPortfolio)
-    document.querySelector('#close-search').addEventListener('click',returnToPortfolio)
+    let returnToPortfolioRow = buildTableRowElement({portfolio: ""})
+    returnToPortfolioRow.innerHTML = "<button id='close-search'>Close Search</button>"
+
+    returnToPortfolioRow.classList.add('Rtable-cell--head')
+    returnToPortfolioRow.style.alignSelf = 'center'
+    main.append(returnToPortfolioRow)
+    document.querySelector('#close-search').addEventListener('click', returnToPortfolio)
 }
 
 const renderQuoteResults = results =>
@@ -565,7 +524,7 @@ const renderQuoteResults = results =>
     let symbolName = currentSearchedStocks[symbolNameIndex]['2. name']
     currentSelectedStock.name = symbolName
     let index = findStockIndexInPortfolio(currentSelectedStock.symbol)
-     let volume = 0
+    let volume = 0
     if (index >= 0)
     {
         volume = portfolio.currentlyOwnedStocks[index].volume
@@ -574,7 +533,7 @@ const renderQuoteResults = results =>
     let symbolCurrency = currentSearchedStocks[symbolNameIndex]['8. currency']
     currentSelectedStock.currency = symbolCurrency
     currentSelectedStock.price = results['Global Quote']['05. price']
-    
+
     renderStock(currentSelectedStock)
 }
 
@@ -631,9 +590,6 @@ const renderPortfolio = portfolio =>
         let noStock1 = buildTableRowElement({noPortfolio: "You do not have any stocks in your portfolio at present. Use the search function to find stocks to buy and sell"})
         noStock1.classList.add('Rtable-cell--head')
         main.append(noStock1)
-        // let noStock2 = buildTableRowElement({noPortfolio: "Use the search function to find stocks to buy and sell"})
-        // noStock2.classList.add('Rtable-cell--head')
-        // main.append(noStock2)
     }
 }
 
@@ -654,16 +610,16 @@ const renderStock = (currentlySelectedStock) =>
 {
     let slideOutTitle = document.querySelector('#slide-out-title')
     slideOutTitle.innerHTML = currentlySelectedStock.symbol
-    
+
     let slideOutSummary = document.querySelector('#slide-out-summary')
     slideOutSummary.innerHTML = currentlySelectedStock.name
-    
+
     let slideOutAmountOwned = document.querySelector('#slide-out-amount-owned')
     slideOutAmountOwned.innerHTML = currentlySelectedStock.volume
 
     document.querySelector('#stock-chart').style.display = 'flex'
     getTimeSeries(currentlySelectedStock.symbol)
-    
+
     let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
     slideOutCurrencyList.forEach(slideOutCurrency => {
         slideOutCurrency.innerHTML = currentlySelectedStock.currency
@@ -671,7 +627,7 @@ const renderStock = (currentlySelectedStock) =>
 
     let slideOutBuyPrice = document.querySelector('#slide-out-buy-price')
     slideOutBuyPrice.innerHTML = formatCurrencyText(currentlySelectedStock.price)
-    
+
     let slideOutSellPrice = document.querySelector('#slide-out-sell-price')
     slideOutSellPrice.innerHTML = formatCurrencyText(currentlySelectedStock.price)
 
@@ -681,7 +637,6 @@ const renderStock = (currentlySelectedStock) =>
 
 const renderNewsForSymbol = (results) =>
 {
-    //console.log(results)
     let newsPlace = document.querySelector('#slide-out-inner')
     if (results.articles.length > 1)
     {
@@ -798,13 +753,13 @@ const searchButtonClick = symbolSearchText =>
     collectResults(queryString, renderSearchResults, 60000)
 }
 
-const portfolioClick = () =>
-{
-    renderPortfolio(portfolio)
-    document.querySelector('#main-results').classList.remove('hidden')
-    document.querySelector('#slide-out-parent').classList.remove('hidden')
-    document.querySelector('#dialog-parent').classList.remove('hidden')
-}
+// const portfolioClick = () =>
+// {
+//     renderPortfolio(portfolio)
+//     document.querySelector('#main-results').classList.remove('hidden')
+//     document.querySelector('#slide-out-parent').classList.remove('hidden')
+//     document.querySelector('#dialog-parent').classList.remove('hidden')
+// }
 
 const menuClick = () =>
 {
@@ -827,14 +782,6 @@ const closeMenuClick = () =>
     document.querySelector('#dialog-box-parent').style.display = 'none'
     document.querySelector('#main-menu').style.display = 'none'
 }
-
-// const timeSeries = symbol =>
-// {
-//     // get example time series request
-//     let queryString = `${baseURL}${timeFunction}${timeSymbol}${symbol}${timeInterval}${apiKey}`
-//     collectResults(symbolSearchText, renderSearchResults)
-// }
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -964,8 +911,8 @@ const setEventListeners = () =>
     closeMenuButton.addEventListener('click', closeMenuClick)
 
     let logo = document.querySelector('#logo-text')
-    logo.addEventListener('click',returnToPortfolio)
-    
+    logo.addEventListener('click', returnToPortfolio)
+
     window.addEventListener('resize', resizeWindow);
 }
 
@@ -1011,21 +958,18 @@ const resizeWindow = () =>
 {
     PNotify.defaults.width = window.innerWidth - 30 + 'px'
     notifyModel = 0
-    let chartX = window.innerWidth/5*4
+    let chartX = window.innerWidth / 5 * 4
     let chartY = 240
-    if(window.innerWidth > 800 && window.innerWidth < 1099)
+    if (window.innerWidth > 800 && window.innerWidth < 1099)
     {
         notifyModel = 1
-        chartX = window.innerWidth/5*4
-    }
-    else if (window.innerWidth > 1100)
+        chartX = window.innerWidth / 5 * 4
+    } else if (window.innerWidth > 1100)
     {
         notifyModel = 2
-        chartX = window.innerWidth/4
+        chartX = window.innerWidth / 4
     }
-    //console.log('innerwidth:'+window.innerWidth)
-    //console.log(chartX)
-    resizeChart(chartX,chartY)
+    resizeChart(chartX, chartY)
 
 }
 
@@ -1048,26 +992,22 @@ const initAppSetup = () =>
 }
 
 
-
 const easyPnotify = (messageText) =>
 {
     let message = {}
     message.text = messageText
-    if(notifyModel == 0)
+    if (notifyModel == 0)
     {
-        message.stack = PNstackMobile    
-    }
-    else if(notifyModel == 1)
+        message.stack = PNstackMobile
+    } else if (notifyModel == 1)
     {
         message.stack = PNstackTablet
-    }
-    else if(notifyModel == 2)
+    } else if (notifyModel == 2)
     {
         message.stack = PNstackLaptop
     }
     PNotify.alert(message)
 }
-
 
 
 // Game Flow Functions
