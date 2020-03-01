@@ -80,8 +80,9 @@ let portfolioFn = {
     },
     calcPortfolioTotalValue: () =>
     {
-        let newPortfolioTotalValue = 0;
-        portfolio.currentlyOwnedStocks.forEach(ownedStock => {
+        let newPortfolioTotalValue = 0
+        portfolio.currentlyOwnedStocks.forEach(ownedStock =>
+        {
             newPortfolioTotalValue += ownedStock.totalValue
         })
         newPortfolioTotalValue += portfolioFn.getCashBalance()
@@ -103,7 +104,8 @@ let portfolioFn = {
 
             if (alphavantageAPIForRefresh)
             {
-                portfolio.currentlyOwnedStocks.forEach(ownedStock => {
+                portfolio.currentlyOwnedStocks.forEach(ownedStock =>
+                {
                     let queryString = buildQuoteQueryString(ownedStock.stock.symbol)
                     collectResults(queryString, portfolioFn.refreshIndividualStockValue, 600)
                 })
@@ -113,7 +115,8 @@ let portfolioFn = {
                 let symbolString = ""
                 let ownedStockLength = portfolio.currentlyOwnedStocks.length
                 let index = 0
-                portfolio.currentlyOwnedStocks.forEach(ownedStock => {
+                portfolio.currentlyOwnedStocks.forEach(ownedStock =>
+                {
                     symbolString += ownedStock.stock.symbol
                     if (index < ownedStockLength - 1)
                     {
@@ -133,8 +136,12 @@ let portfolioFn = {
     },
     refreshAllStockValues: (results) =>
     {
-        results.results.forEach(symbol => {
-            portfolioFn.setStockPrice(symbol.symbol, symbol.lastPrice)
+        results.results.forEach(symbol =>
+        {
+            if (symbol.lastPrice)
+            {
+                portfolioFn.setStockPrice(symbol.symbol, symbol.lastPrice)
+            }
         })
         portfolioFn.calcPortfolioTotalValue()
     },
@@ -187,7 +194,7 @@ let portfolioFn = {
 const formatCurrencyText = (amount) =>
 {
     amount = parseFloat(amount)
-    let currencyFormatOptions = {currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2}
+    let currencyFormatOptions = { currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }
     return "$" + amount.toLocaleString('en-US', currencyFormatOptions)
 }
 
@@ -246,33 +253,33 @@ const buildNewPortfolio = () =>
 // Charts
 
 let chartObject =
-    {
-        bindto: '#stock-chart',
-        size: {
-            height: 240,
-            width: 320
-        },
-        data: {
-            x: 'date',
-            columns: [
-                ['date', 10, 30, 45, 50, 70, 100],
-                ['data1', 30, 200, 100, 400, 150, 250],
-            ]
-        },
-        axis: {
-            x: {
-                type: 'timeseries'
-            }
-        },
-        colors: {data1: '#ffffff'},
-        regions: [{start: '2019-08-15', end: '2020-01-07'}]
-    }
+{
+    bindto: '#stock-chart',
+    size: {
+        height: 240,
+        width: 320
+    },
+    data: {
+        x: 'date',
+        columns: [
+            ['date', 10, 30, 45, 50, 70, 100],
+            ['data1', 30, 200, 100, 400, 150, 250],
+        ]
+    },
+    axis: {
+        x: {
+            type: 'timeseries'
+        }
+    },
+    colors: { data1: '#ffffff' },
+    regions: [{ start: '2019-08-15', end: '2020-01-07' }]
+}
 
 let c3ChartRef
 
 const newChart = (chartData) =>
 {
-    c3ChartRef = c3.generate(chartData);
+    c3ChartRef = c3.generate(chartData)
 }
 
 newChart(chartObject)
@@ -286,7 +293,8 @@ const prepareDataForChart = (dataForPrep) =>
     data = dataForPrep['Time Series (Daily)']
     let axisArray = ['date']
     let dataArray = [dataForPrep['Meta Data']["2. Symbol"]]
-    Object.keys(dataForPrep['Time Series (Daily)']).forEach(date => {
+    Object.keys(dataForPrep['Time Series (Daily)']).forEach(date =>
+    {
         axisArray.push(date)
         dataArray.push(parseFloat(data[date]["4. close"]))
     })
@@ -307,7 +315,7 @@ const prepareDataForChart = (dataForPrep) =>
 
 const resizeChart = (x, y) =>
 {
-    c3ChartRef.resize({height: y, width: x})
+    c3ChartRef.resize({ height: y, width: x })
 }
 
 
@@ -357,7 +365,8 @@ const buildTableRowElement = (tableElementObject) =>
     let rowElement = document.createElement('div')
     rowElement.classList.add('Rtable-cell')
 
-    Object.keys(tableElementObject).forEach(keyName => {
+    Object.keys(tableElementObject).forEach(keyName =>
+    {
 
         let keyValue = tableElementObject[keyName]
 
@@ -366,7 +375,7 @@ const buildTableRowElement = (tableElementObject) =>
             rowElement.addEventListener('click', keyValue)
         } else if (keyName.includes('domDataSet'))
         {
-            rowElement.setAttribute("data-" + keyValue[0], keyValue[1]);
+            rowElement.setAttribute("data-" + keyValue[0], keyValue[1])
         } else
         {
             let rowSubElement = document.createElement('div')
@@ -386,7 +395,8 @@ function findStockIndexInPortfolio(symbol)
 {
     let stockToFindIndex = -1
     let index = 0
-    portfolio.currentlyOwnedStocks.forEach(ownedStock => {
+    portfolio.currentlyOwnedStocks.forEach(ownedStock =>
+    {
         if (ownedStock.stock.symbol == symbol)
         {
             stockToFindIndex = index
@@ -461,7 +471,7 @@ const buildDailyTimeSeriesQueryString = (symbol) =>
 
 const buildNewsQueryString = (searchTerms) =>
 {
-    return `https://newsapi.org/v2/everything?q=${searchTerms}&from=2020-01-08&sortBy=popularity&apiKey=4287cda86a9948c9b0c52cc90cf7c8c6`
+    return `https://newsapi.org/v2/everything?q=${searchTerms}&sortBy=popularity&apiKey=4287cda86a9948c9b0c52cc90cf7c8c6`
 }
 
 const getNews = (searchTerms) =>
@@ -478,16 +488,17 @@ const renderSearchResults = results =>
 {
     let main = document.querySelector('#main-results')
     main.innerHTML = ""
-    currentSearchedStocks = results.bestMatches;
+    currentSearchedStocks = results.bestMatches
     let index = 0
     currentSearchSymbolLookup = {}
-    let stockSearchHeader = buildTableRowElement({portfolioHeader: "Search results"})
+    let stockSearchHeader = buildTableRowElement({ portfolioHeader: "Search results" })
     stockSearchHeader.classList.add('Rtable-cell--head')
     main.append(stockSearchHeader)
 
     if (results.bestMatches.length > 0)
     {
-        results.bestMatches.forEach(match => {
+        results.bestMatches.forEach(match =>
+        {
             let rowElementObject = {
                 clickEvent: searchResultClick,
                 domDataSet1: ['symbol', match["1. symbol"]],
@@ -503,11 +514,11 @@ const renderSearchResults = results =>
         })
     } else
     {
-        let noResults1 = buildTableRowElement({portfolio: "There were no search results for that query"})
+        let noResults1 = buildTableRowElement({ portfolio: "There were no search results for that query" })
         noResults1.classList.add('Rtable-cell--head')
         main.append(noResults1)
     }
-    let returnToPortfolioRow = buildTableRowElement({portfolio: ""})
+    let returnToPortfolioRow = buildTableRowElement({ portfolio: "" })
     returnToPortfolioRow.innerHTML = "<button id='close-search'>Close Search</button>"
 
     returnToPortfolioRow.classList.add('Rtable-cell--head')
@@ -546,7 +557,7 @@ const renderPortfolio = portfolio =>
     let main = document.querySelector('#main-results')
     main.innerHTML = ""
 
-    let portfolioHeader = buildTableRowElement({portfolioHeader: "Your Stocks"})
+    let portfolioHeader = buildTableRowElement({ portfolioHeader: "Your Stocks" })
     portfolioHeader.classList.add('Rtable-cell--head')
     main.append(portfolioHeader)
 
@@ -565,7 +576,8 @@ const renderPortfolio = portfolio =>
         headerRow.classList.add('Rtable-cell--head')
         main.append(headerRow)
         let index = 0
-        portfolio.currentlyOwnedStocks.forEach(ownedStock => {
+        portfolio.currentlyOwnedStocks.forEach(ownedStock =>
+        {
             if (ownedStock.totalValue == null)
             {
                 console.log(ownedStock)
@@ -587,7 +599,7 @@ const renderPortfolio = portfolio =>
         })
     } else
     {
-        let noStock1 = buildTableRowElement({noPortfolio: "You do not have any stocks in your portfolio at present. Use the search function to find stocks to buy and sell"})
+        let noStock1 = buildTableRowElement({ noPortfolio: "You do not have any stocks in your portfolio at present. Use the search function to find stocks to buy and sell" })
         noStock1.classList.add('Rtable-cell--head')
         main.append(noStock1)
     }
@@ -621,7 +633,8 @@ const renderStock = (currentlySelectedStock) =>
     getTimeSeries(currentlySelectedStock.symbol)
 
     let slideOutCurrencyList = document.querySelectorAll('.slide-out-currency')
-    slideOutCurrencyList.forEach(slideOutCurrency => {
+    slideOutCurrencyList.forEach(slideOutCurrency =>
+    {
         slideOutCurrency.innerHTML = currentlySelectedStock.currency
     })
 
@@ -825,7 +838,8 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
             console.log("Cached API Request. Cache expires in " + (-expiryMS / 1000) + " seconds")
         } else
         {
-            let results = await axios.get(queryString)
+            console.log("https://sweet-unit-0544.stocplay.workers.dev/?" + queryString)
+            let results = await axios.get("https://sweet-unit-0544.stocplay.workers.dev/?" + queryString)
             if (results.data != null)
             {
                 sessionStorage.setItem(queryString, JSON.stringify(results.data))
@@ -863,7 +877,8 @@ const setEventListeners = () =>
     // Toolbox search button event listener
     let searchText = document.querySelector('#search-text')
     let searchButton = document.querySelector('#search-button')
-    searchButton.addEventListener('click', (e) => {
+    searchButton.addEventListener('click', (e) =>
+    {
         e.preventDefault()
         searchButtonClick(searchText.value)
         searchText.value = ""
@@ -876,7 +891,8 @@ const setEventListeners = () =>
     // Slide out buy button event listener
     let slideOutBuy = document.querySelector('#slide-out-buy')
     let slideOutBuyAmount = document.querySelector("#slide-out-buy-amount")
-    slideOutBuy.addEventListener('click', (e) => {
+    slideOutBuy.addEventListener('click', (e) =>
+    {
         e.preventDefault()
         slideOutBuyClick(currentSelectedStock, slideOutBuyAmount.value)
         slideOutBuyAmount.value = ""
@@ -885,7 +901,8 @@ const setEventListeners = () =>
     // Slide out buy button event listener
     let slideOutSell = document.querySelector('#slide-out-sell')
     let slideOutSellAmount = document.querySelector("#slide-out-sell-amount")
-    slideOutSell.addEventListener('click', (e) => {
+    slideOutSell.addEventListener('click', (e) =>
+    {
         e.preventDefault()
         slideOutSellClick(currentSelectedStock, slideOutSellAmount.value)
         slideOutSellAmount.value = ""
@@ -906,8 +923,10 @@ const setEventListeners = () =>
     // })
 
     let onboardingButtons = document.querySelectorAll('.onboard-start-buttons')
-    onboardingButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
+    onboardingButtons.forEach(button =>
+    {
+        button.addEventListener('click', (e) =>
+        {
             e.preventDefault()
             let startCash = parseInt(e.currentTarget.dataset.amount)
             portfolioFn.updateCashBalance(startCash)
@@ -927,7 +946,7 @@ const setEventListeners = () =>
     let logo = document.querySelector('#logo-text')
     logo.addEventListener('click', returnToPortfolio)
 
-    window.addEventListener('resize', resizeWindow);
+    window.addEventListener('resize', resizeWindow)
 }
 
 let PNstackMobile = {
@@ -989,7 +1008,7 @@ const resizeWindow = () =>
 
 const initAppSetup = () =>
 {
-    PNotify.defaults.icons = 'fontawesome5';
+    PNotify.defaults.icons = 'fontawesome5'
     PNotify.defaults.width = window.innerWidth - 30 + 'px'
     PNotify.defaults.modules = {
         Buttons: {
@@ -1034,7 +1053,8 @@ const beginGame = () =>
     renderPortfolio(portfolio)
     portfolioFn.calcPortfolioTotalValue()
     easyPnotify('Welcome')
-    setTimeout(() => {
+    setTimeout(() =>
+    {
         easyPnotify('Search for stock using the search bar')
     }, 2000)
 }

@@ -12,8 +12,8 @@
       <list>
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/style.css" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/style.css" />
       </list>
     </option>
   </component>
@@ -72,6 +72,7 @@
       <updated>1578192695227</updated>
       <workItem from="1578192699643" duration="86543000" />
       <workItem from="1578521547737" duration="15833000" />
+      <workItem from="1579970201819" duration="896000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,14 +9,15 @@
     <link rel="stylesheet" href="normalize.css">
     <link href="c3.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="pnotify/PNotifyBrightTheme.css" rel="stylesheet" type="text/css"/>
+    <link href="pnotify/PNotifyBrightTheme.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,900&display=swap" rel="stylesheet">
 
     <!--  Essential META Tags -->
 
     <meta property="og:title" content="STOC PLAY: Virtual Stock Trading Game">
     <meta property="og:description" content="Trade virtual stocks to gain confidence in stock trading.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1478334044015-53514ea3ec37?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80">
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1478334044015-53514ea3ec37?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80">
     <meta property="og:url" content="https://pages.git.generalassemb.ly/tsholbourn/stock-trader/">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -31,97 +33,101 @@
     <!--    <meta property="fb:app_id" content="your_app_id" />-->
     <!--    <meta name="twitter:site" content="@gullwings13">-->
 </head>
+
 <body>
-<header>
-    <div id="logo">
-        <a href="#" id="logo-text">STOC PLAY</a>
-    </div>
-
-</header>
-<div id="main">
-    <main id="main-results" class="Rtable">
-
-    </main>
-    <div id="slide-out-parent" class="hidden">
-        <div id="slide-out-title"></div>
-        <div id="slide-out-summary"></div>
-        <div id="slide-out-amount">
-            <div id="slide-out-amount-owned-label">Shares owned:</div>
-            <div id="slide-out-amount-owned"></div>
-        </div>
-        <div class="slide-out-row">
-            <div id="slide-out-buy-price"></div>
-            <div class="slide-out-currency"></div>
-<!--            <label class="slide-out-amount-label">Buy Amount:</label>-->
-            <input class="slide-out-input" id="slide-out-buy-amount" placeholder="# of shares">
-            <button id="slide-out-buy">Buy</button>
-        </div>
-        <div class="slide-out-row">
-            <div id="slide-out-sell-price"></div>
-            <div class="slide-out-currency"></div>
-<!--            <label class="slide-out-amount-label">Sell Amount:</label>-->
-            <input class="slide-out-input" id="slide-out-sell-amount" placeholder="# of shares">
-            <button id="slide-out-sell">Sell</button>
-        </div>
-        <div id="stock-chart"></div>
-        <div id="stock-new-title">Related news:</div>
-        <div id="slide-out-inner">
+    <header>
+        <div id="logo">
+            <a href="#" id="logo-text">STOC PLAY</a>
         </div>
 
-        <button id="slide-out-close">
-            Close
-        </button>
-    </div>
-    <div id="dialog-box-parent" class="hidden">
-        <div id="onboarding">
-            <div class="onboarding-welcome">Welcome</div>
-            <p class="onboarding-intro"><span id="onboarding-inline-logo">STOC PLAY</span> allows you to gain confidence in the stock market by allowing you to invest money virtually.
-                Track your progress over several days. You can restart the game at any time via the X menu.</p>
-            <p class="onboarding-intro">Please select a starting amount of money. Higher starting values unlock as you reach certain
-                milestones</p>
-            <button class="onboard-start-buttons" data-amount='5000'>$5,000</button>
-            <button class="onboard-start-buttons" data-amount='20000' disabled>$20,000</button>
-            <button class="onboard-start-buttons" data-amount='100000' disabled>$100,000</button>
-            <!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
-            <!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
-        </div>
-        <div id="main-menu">
-            <div>Main Menu</div>
-            <button id="restart-game">Restart Game</button>
-            <button id="close-menu">Close</button>
-        </div>
-    </div>
-</div>
-<div id="tool-box">
-    <div class="tool-box-row">
-        <div id="cash-label" class="performance-item">Total Cash:</div>
-        <div id="cash" class="performance-item"></div>
-    </div>
-    <div class="tool-box-row">
-        <div id="total-value-label" class="performance-item">Total Value:</div>
-        <div id="total-value" class="performance-item"></div>
-<!--        <div id="time-label" class="performance-item"></div>-->
-<!--        <div id="time-value" class="performance-item"></div>-->
-<!--        <button id="total-value-refresh" class="performance-item">Refresh</button>-->
-<!--        <button id="portfolio">Portfolio</button>-->
-    </div>
-    <div class="tool-box-row">
-        <form id="search-form">
-            <input type="text" id="search-text" placeholder="Company or Symbol">
-            <button id="search-button">Search</button>
-        </form>
-        <div id="menu">
-            <button id="menu-button">Menu</button>
-        </div>
-    </div>
-</div>
+    </header>
+    <div id="main">
+        <main id="main-results" class="Rtable">
 
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="c3.min.js"></script>
-<script type="text/javascript" src="pnotify/PNotify.js"></script>
-<script type="text/javascript" src="pnotify/PNotifyButtons.js"></script>
-<script type="text/javascript" src="pnotify/PNotifyMobile.js"></script>
-<script src="app.js"></script>
+        </main>
+        <div id="slide-out-parent" class="hidden">
+            <div id="slide-out-title"></div>
+            <div id="slide-out-summary"></div>
+            <div id="slide-out-amount">
+                <div id="slide-out-amount-owned-label">Shares owned:</div>
+                <div id="slide-out-amount-owned"></div>
+            </div>
+            <div class="slide-out-row">
+                <div id="slide-out-buy-price"></div>
+                <div class="slide-out-currency"></div>
+                <!--            <label class="slide-out-amount-label">Buy Amount:</label>-->
+                <input class="slide-out-input" id="slide-out-buy-amount" placeholder="# of shares">
+                <button id="slide-out-buy">Buy</button>
+            </div>
+            <div class="slide-out-row">
+                <div id="slide-out-sell-price"></div>
+                <div class="slide-out-currency"></div>
+                <!--            <label class="slide-out-amount-label">Sell Amount:</label>-->
+                <input class="slide-out-input" id="slide-out-sell-amount" placeholder="# of shares">
+                <button id="slide-out-sell">Sell</button>
+            </div>
+            <div id="stock-chart"></div>
+            <div id="stock-new-title">Related news:</div>
+            <div id="stock-news-attribute">Powered by <a href="https://newsapi.org">newsapi.org</a></div>
+            <div id="slide-out-inner">
+            </div>
+
+            <button id="slide-out-close">
+                Close
+            </button>
+        </div>
+        <div id="dialog-box-parent" class="hidden">
+            <div id="onboarding">
+                <div class="onboarding-welcome">Welcome</div>
+                <p class="onboarding-intro"><span id="onboarding-inline-logo">STOC PLAY</span> allows you to gain confidence in the stock market by
+                    allowing you to invest money virtually.
+                    Track your progress over several days. You can restart the game at any time via the X menu.</p>
+                <p class="onboarding-intro">Please select a starting amount of money. Higher starting values unlock as you reach certain
+                    milestones</p>
+                <button class="onboard-start-buttons" data-amount='5000'>$5,000</button>
+                <button class="onboard-start-buttons" data-amount='20000' disabled>$20,000</button>
+                <button class="onboard-start-buttons" data-amount='100000' disabled>$100,000</button>
+                <!--            <button class="onboard-start-buttons" data-amount='100000000' disabled>$1,000,000</button>-->
+                <!--            <button class="onboard-start-buttons" data-amount='500000000' disabled>$500,000,000</button>-->
+            </div>
+            <div id="main-menu">
+                <div>Main Menu</div>
+                <button id="restart-game">Restart Game</button>
+                <button id="close-menu">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="tool-box">
+        <div class="tool-box-row">
+            <div id="cash-label" class="performance-item">Total Cash:</div>
+            <div id="cash" class="performance-item"></div>
+        </div>
+        <div class="tool-box-row">
+            <div id="total-value-label" class="performance-item">Total Value:</div>
+            <div id="total-value" class="performance-item"></div>
+            <!--        <div id="time-label" class="performance-item"></div>-->
+            <!--        <div id="time-value" class="performance-item"></div>-->
+            <!--        <button id="total-value-refresh" class="performance-item">Refresh</button>-->
+            <!--        <button id="portfolio">Portfolio</button>-->
+        </div>
+        <div class="tool-box-row">
+            <form id="search-form">
+                <input type="text" id="search-text" placeholder="Company or Symbol">
+                <button id="search-button">Search</button>
+            </form>
+            <div id="menu">
+                <button id="menu-button">Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="c3.min.js"></script>
+    <script type="text/javascript" src="pnotify/PNotify.js"></script>
+    <script type="text/javascript" src="pnotify/PNotifyButtons.js"></script>
+    <script type="text/javascript" src="pnotify/PNotifyMobile.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>

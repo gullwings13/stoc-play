@@ -317,6 +317,12 @@ button:hover {
     color: var(--color-1);
 }
 
+#stock-news-attribute{
+    font-size: smaller;
+    font-weight: 400;
+    color: var(--color-1);
+}
+
 .stock-news-title{
     color: var(--color-2);
     padding: 0 0 0 10px;
@@ -398,6 +404,10 @@ button:hover {
     font-weight: 900;
 }
 
+#main-menu.hidden {
+    display: none;
+}
+
 #restart-game, #close-menu {
     height: 15vh;
     width: 40vw;
@@ -409,9 +419,7 @@ button:hover {
     display: none;
 }
 
-#main-menu {
-    display: none;
-}
+
 
 #onboarding {
     height: 100%;
