@@ -209,14 +209,19 @@ const loadLocalPortfolio = () =>
     {
         portfolio = JSON.parse(portfolioString)
         gameInProgress = true
-        document.querySelector('#onboarding').style.display = 'none'
-        document.querySelector('#dialog-box-parent').style.display = 'none'
+        // document.querySelector('#onboarding').style.display = 'none'
+        // document.querySelector('#dialog-box-parent').style.display = 'none'
+        document.querySelector('#onboarding').classList.add('hidden')
+        document.querySelector('#dialog-box-parent').classList.add('hidden')
         renderPortfolio(portfolio)
     } else
     {
         buildNewPortfolio()
-        document.querySelector('#onboarding').style.display = 'flex'
-        document.querySelector('#dialog-box-parent').style.display = 'flex'
+        // document.querySelector('#onboarding').style.display = 'flex'
+        // document.querySelector('#dialog-box-parent').style.display = 'flex'
+        // document.querySelector('#onboarding').classList.remove('hidden')
+        // document.querySelector('#dialog-box-parent').classList.remove('hidden')
+        showOnboardingCloseMainMenu()
     }
 }
 
@@ -647,7 +652,6 @@ const renderStock = (currentlySelectedStock) =>
     getNews(currentlySelectedStock.name)
 }
 
-
 const renderNewsForSymbol = (results) =>
 {
     let newsPlace = document.querySelector('#slide-out-inner')
@@ -778,7 +782,8 @@ const menuClick = () =>
 {
     // document.querySelector('#dialog-box-parent').style.display = 'flex'
     // document.querySelector('#main-menu').style.display = 'flex'
-    document.querySelector('#dialog-parent').classList.remove('hidden')
+    // document.querySelector('#dialog-parent').classList.remove('hidden') // wrong ID NAME
+    document.querySelector('#dialog-box-parent').classList.remove('hidden')
     document.querySelector('#main-menu').classList.remove('hidden')
 }
 
@@ -805,7 +810,7 @@ const showOnboardingCloseMainMenu = () =>
 
 const closeMenuClick = () =>
 {
-    document.querySelector('#dialog-parent').classList.add('hidden')
+    document.querySelector('#dialog-box-parent').classList.add('hidden')
     // document.querySelector('#dialog-box-parent').style.display = 'none'
     // document.querySelector('#main-menu').style.display = 'none'
 }
@@ -822,7 +827,6 @@ const closeMenuClick = () =>
 // cachetime default is 5 mins (300), 0 means don't cache
 // temp bumped cache to 3000 seconds (50 minutes) to minimize hits on API
 
-
 const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
 {
     try
@@ -838,7 +842,7 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
             console.log("Cached API Request. Cache expires in " + (-expiryMS / 1000) + " seconds")
         } else
         {
-            console.log("https://sweet-unit-0544.stocplay.workers.dev/?" + queryString)
+            // console.log("https://sweet-unit-0544.stocplay.workers.dev/?" + queryString)
             let results = await axios.get("https://sweet-unit-0544.stocplay.workers.dev/?" + queryString)
             if (results.data != null)
             {
@@ -866,7 +870,6 @@ const collectResults = async (queryString, renderFunction, cacheTime = 300) =>
         easyPnotify("Ruh Roh. Could not get the data dawg.")
     }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1048,8 +1051,10 @@ const easyPnotify = (messageText) =>
 const beginGame = () =>
 {
     gameInProgress = true
-    document.querySelector('#onboarding').style.display = 'none'
-    document.querySelector('#dialog-box-parent').style.display = 'none'
+    // document.querySelector('#onboarding').style.display = 'none'
+    // document.querySelector('#dialog-box-parent').style.display = 'none'
+    document.querySelector('#onboarding').classList.add('hidden')
+    document.querySelector('#dialog-box-parent').classList.add('hidden')
     renderPortfolio(portfolio)
     portfolioFn.calcPortfolioTotalValue()
     easyPnotify('Welcome')

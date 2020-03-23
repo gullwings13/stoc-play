@@ -1,15 +1,15 @@
 What is completed:
 
-DONE - Collect stock price data from https://www.alphavantage.co/ API
-DONE - Display stock price data on page
-DONE - Allow user to search for specific stock
+DONE - Collect stock price data from https://www.alphavantage.co/ (console Log data from static API query)
+DONE - Display stock price data on page (print data from static API query on page)
+DONE - Allow user to search for specific stock (dynamic API query)
 DONE - Allow user to buy stock (virtually at current price) (putting into their portfolio)
 DONE - Store portfolio and current cash balance in local storage
 DONE - Allow user to sell stock (virtually at current price) (removing from their portfolio)
 DONE - Add new stock to existing stock if same symbol
 DONE - CSS for displaying portfolio is not currently spaced out well
 DONE - Allow user to see current value of portfolio (via refresh button)
-DONE - Limit max stocks to 2
+DONE - Limit max stocks to 2 (Because of API Limits)
 DONE - Remove stock when value goes to zero
 DONE - Cannot see how many stocks are owned when clicking on stock
 DONE - Get back to own portfolio from search screen
@@ -20,8 +20,11 @@ DONE - No checks on if has any stocks to sell
 DONE - Cannot see new amount of stock on purchase screen
 DONE - Round stock display value
 DONE - Round stock purchase and sell amounts
-
-
+DONE - background color of chart
+CLOSE ENOUGH - landscape mode is wack (tool box scrolls at one point and chart goes above logo)
+DONE - search centered
+DONE - make chart full width of window
+DONE - add more to portfolio columns
 
 Working on:
 
@@ -32,5 +35,9 @@ What is not completed:
 
 
 What issues are there:
-- background color of chart
+
 - move close button on desktop version to top
+- mini charts
+- up or down since purchasing indicator
+- add second close button at bottom of slide out (buy sell window)
+

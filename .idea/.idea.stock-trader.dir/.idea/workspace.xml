@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/style.css" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -71,8 +72,12 @@
       <option name="presentableId" value="Default" />
       <updated>1578192695227</updated>
       <workItem from="1578192699643" duration="86543000" />
+<<<<<<< HEAD
+      <workItem from="1578521547737" duration="19461000" />
+=======
       <workItem from="1578521547737" duration="15833000" />
       <workItem from="1579970201819" duration="896000" />
+>>>>>>> master
     </task>
     <servers />
   </component>
